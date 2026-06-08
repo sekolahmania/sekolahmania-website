@@ -1,0 +1,528 @@
+# SekolahMania — Pembelajaran Mendalam STEM
+
+> Platform pelatihan guru STEM interaktif untuk mendukung implementasi **Pembelajaran Mendalam** (PM) di sekolah menengah Indonesia.
+>
+> Founder 1: **Ayuk Ratna Puspaningsih** — Guru Biologi, SMA Negeri Bali Mandara.
+> Founder 2: **I Gede Suta Piantih** — Guru Fisika dan Matematika, Private Tutor & Freelance Website Developer.
+
+---
+
+## Daftar Isi
+
+- [Tentang Proyek](#tentang-proyek)
+- [Tangkapan Layar](#tangkapan-layar)
+- [Arsitektur Frontend](#arsitektur-frontend)
+- [Struktur File](#struktur-file)
+- [Sections & Fitur](#sections--fitur)
+- [Desain Sistem (CSS Tokens)](#desain-sistem-css-tokens)
+- [JavaScript](#javascript)
+- [Formulir & Backend (Supabase)](#formulir--backend-supabase)
+- [Internasionalisasi (i18n)](#internasionalisasi-i18n)
+- [Deployment](#deployment)
+- [Roadmap](#roadmap)
+- [Referensi Konten](#referensi-konten)
+- [Lisensi](#lisensi)
+
+---
+
+## Tentang Proyek
+
+SekolahMania adalah situs web statis satu halaman (*single-page static site*) yang dirancang sebagai platform pelatihan guru untuk program **Pembelajaran Mendalam (PM)** dari Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen) Republik Indonesia. Platform ini memuat materi, aktivitas interaktif H5P, alat perancangan RPM (*Rencana Pelaksanaan Pembelajaran Mendalam*), media hub video/dokumen, serta formulir Q&A dan umpan balik peserta.
+
+Platform ini dibangun dengan filosofi arsitektur **zero-framework** — terinspirasi dari pendekatan Aloha Browser: HTML statis, jQuery, CSS semantik buatan sendiri, tanpa bundler, tanpa runtime, tanpa hidration overhead.
+
+### Konteks Konten
+
+Platform ini didasarkan pada dokumen resmi **"Pembelajaran Mendalam: Menuju Pendidikan Bermutu untuk Semua"** yang diterbitkan oleh Tim Pengembang Pembelajaran Mendalam (TPPM), Pusat Kurikulum dan Pembelajaran, Kemendikdasmen RI. Konten mencakup:
+
+- Latar belakang: data PISA 2022 dan tantangan HOTS peserta didik Indonesia
+- Definisi, prinsip, dan kerangka Pembelajaran Mendalam
+- 8 Dimensi Profil Lulusan
+- Tiga pengalaman belajar: Memahami → Mengaplikasi → Merefleksi
+- Implementasi PM di berbagai jenjang dan mata pelajaran
+
+---
+
+## Tangkapan Layar
+
+```
+┌─────────────────────────────────────────────────┐
+│  SekolahMania          Tentang  Materi  Unit Plan │  ← Fixed nav (blur backdrop)
+├─────────────────────────────────────────────────┤
+│                                                   │
+│   Pembelajaran          ┌─────────────────────┐  │
+│   Mendalam              │  PEMBICARA UTAMA     │  │
+│   Menuju STEM           │  Ayuk Ratna          │  │  Hero section
+│                         │  Puspaningsih        │  │
+│   [Mulai Belajar →]     │  Guru Biologi        │  │
+│   [Tentang Program]     │  SMA N Bali Mandara  │  │
+│                         └─────────────────────┘  │
+├─────────────────────────────────────────────────┤
+│  ◆ STEM Education  ◆ Inkuiri  ◆ PISA 2022  ◆ …  │  ← Scrolling ribbon
+├─────────────────────────────────────────────────┤
+│  Modul Interaktif  │  8 Dimensi  │  Unit Plan    │  ← Content sections
+│  PISA Data Chart   │  Media Hub  │  Q&A Form     │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
+## Arsitektur Frontend
+
+| Aspek | Keputusan | Alasan |
+|---|---|---|
+| **Framework** | Tidak ada (MPA statis) | Zero hydration overhead, fully crawlable |
+| **Rendering** | Static HTML hand-authored | No SSR runtime, instant TTFB |
+| **Styling** | Custom CSS semantik + BEM-adjacent | Tidak ada utility framework lock-in |
+| **Interaktivitas** | jQuery 3.7.0 (CDN + SRI) | Budget interaktivitas sederhana |
+| **Bundler** | Tidak ada | Zero build complexity, deploy via scp/rsync |
+| **Animasi** | Intersection Observer + CSS transitions | No GSAP dependency |
+| **Analytics** | Plausible.io proxy pattern | Cookieless, bypass adblocker |
+| **i18n** | `data-i18n` attribute pattern | SEO-safe, English default in DOM |
+| **Cache-bust** | Querystring integer (`?2`) | Manual, sama seperti Aloha |
+| **Images** | `<picture>` WebP + PNG | Manual format control |
+
+### Perbedaan dari Aloha (peningkatan)
+
+- Hamburger animation dengan CSS 3-bar → X transform (Aloha tidak memiliki ini)
+- Active nav link indicator via scroll Intersection tracking
+- Scroll-based progress strip (sticky, show/hide)
+- Back-to-top button dengan smooth scroll
+- Unit Plan Builder: 4-step wizard form dengan download `.txt`
+- Media tab switcher (Video / Dokumen) tanpa page reload
+
+---
+
+## Struktur File
+
+```
+sekolahmania/
+├── sekolahmania.html        # Seluruh aplikasi (1 file, 3.704 baris)
+├── README.md                # Dokumentasi ini
+│
+├── js/                      # (production) — pisahkan dari inline
+│   ├── scripts.js?2         # Semua logika jQuery (cache-bust manual)
+│   └── i18n/
+│       ├── id.json?1        # Bahasa Indonesia (default)
+│       └── en.json?1        # English fallback
+│
+├── img/                     # (production) — aset gambar
+│   ├── ayuk-ratna.webp      # Foto pembicara
+│   ├── ayuk-ratna.png       # Fallback PNG
+│   └── og-image.png         # Open Graph 1200×630
+│
+└── public/                  # (jika di-deploy ke Vercel/Netlify)
+    └── stats/               # Plausible proxy endpoint
+```
+
+> **Catatan:** Saat ini seluruh CSS, HTML, dan JS ada dalam satu file `sekolahmania.html` untuk kemudahan deployment awal. Untuk production, ekstrak ke file terpisah mengikuti pola di atas.
+
+---
+
+## Sections & Fitur
+
+### 1. `#hero` — Hero Section
+- Layout 2-kolom: teks kiri, Speaker Card kanan
+- Animasi `fadeUp` bertahap (CSS keyframe, no JS)
+- Speaker Card dengan avatar initial, rotating ring, topic tags, PM badge
+- Stats row: 5 Modul · 8 Dimensi · 3 Pengalaman Belajar
+- Responsive: stack 1 kolom di mobile
+
+### 2. Program Ribbon
+- Marquee horizontal infinite scroll (`animation: scrollX`)
+- Pause on hover
+- Konten: keyword-keyword PM dan STEM
+
+### 3. `#tentang` — Pembelajaran Mendalam
+- Diagram cincin konsentris (CSS pure, no SVG library)
+- 3 kartu prinsip: Berkesadaran · Bermakna · Menggembirakan
+- 4 Pilar Olah (Pikir, Hati, Rasa, Raga) sebagai dark cards
+
+### 4. `#mengapa` — Data PISA 2022
+- Big stat: >99% LOTS / <1% HOTS
+- Stacked bar chart (CSS flex, no chart library) untuk Membaca / Matematika / Sains
+- Legend interaktif dengan tooltip via `title` attribute
+- Catatan solusi PM di bawah chart
+
+### 5. `#materi` — 6 Modul Pelatihan
+- Grid 3×2 module cards dengan header gradient per modul
+- Setiap card: nomor modul, judul, deskripsi, 4 topik sub-item
+
+### 6. `#dimensi` — 8 Dimensi Profil Lulusan
+- Grid 4×2 cards dengan top border gradient
+- Setiap card: nomor, emoji, judul, deskripsi singkat
+- Scroll reveal bertahap dengan `reveal-delay`
+
+### 7. `#aktivitas` — Aktivitas H5P
+- 6 activity cards di dark navy background
+- Badge jenis: H5P Course Presentation, Documentation Tool, Branching Scenario, YouTube, Interactive Video, Google Drive
+- Feature list dengan custom checkmark bullets
+
+### 8. `#unitplan` — Unit Plan Builder ⭐
+4-step wizard form untuk merancang RPM:
+
+| Langkah | Konten |
+|---|---|
+| 1. Identifikasi | Mata pelajaran, kelas/fase, waktu, profil peserta didik, 8 Dimensi checkbox |
+| 2. Desain | Tujuan pembelajaran, topik, praktik pedagogis, lingkungan, kemitraan |
+| 3. Pengalaman Belajar | Textarea: Memahami / Mengaplikasi / Merefleksi |
+| 4. Asesmen | Diagnostik, formatif, sumatif, catatan tambahan |
+
+**Output:** Generate file `.txt` dan download otomatis via `data:` URI. Siap dihubungkan ke Supabase untuk penyimpanan cloud.
+
+### 9. `#media` — Media Hub
+Tab switcher antara dua panel:
+- **Video Sesi** — 6 video card dengan thumbnail gradient, play button, durasi, judul
+- **Dokumen & Template** — 8 drive items (PDF, DOCX, XLSX, PPTX) dengan ikon type-color
+
+### 10. `#alur` — Alur Pengalaman Belajar
+- 3-step horizontal flow dengan connecting line CSS
+- Setiap tahap: circle number, kicker, judul, deskripsi, topic tags berwarna
+- Responsive: stack vertikal di mobile, garis connector disembunyikan
+
+### 11. `#tanya` — Tanya Jawab
+- Form: nama, sekolah, topik (dropdown), pertanyaan (textarea)
+- Sidebar: tips pertanyaan efektif + kartu info pembicara
+- Success message dengan `fadeIn/fadeOut`
+
+### 12. `#feedback` — Umpan Balik (CTA)
+- Star rating interaktif (1–5 ⭐) dengan visual toggle
+- Form: nama, sekolah, sesi (dropdown), rating, pesan
+- Dark gradient section background
+
+### Progress Strip & Back-to-Top
+- **Progress Strip:** sticky bar dengan 6 segment bar (satu per modul), muncul setelah scroll 500px, menghilang di hero
+- **Back-to-Top:** tombol bulat kiri kanan bawah, muncul setelah 400px scroll
+
+---
+
+## Desain Sistem (CSS Tokens)
+
+Semua warna dan font didefinisikan sebagai CSS Custom Properties di `:root`:
+
+```css
+/* Palette */
+--navy:      #0D2137   /* Background gelap utama */
+--teal:      #0E7C6E   /* Warna brand primer */
+--teal-mid:  #14A090   /* Hover/active teal */
+--teal-lt:   #3ECAB7   /* Aksen terang */
+--amber:     #F59D2A   /* CTA, highlight */
+--amber-lt:  #FFD27F   /* Hover amber */
+--cream:     #FBF8F3   /* Background terang utama */
+--cream2:    #F2EDE4   /* Background terang alternatif */
+
+/* Typography */
+--display:   'Fraunces'    /* Display/heading — editorial serif */
+--body:      'Figtree'     /* Body — humanist sans */
+--mono:      'JetBrains Mono'  /* Label, kicker, badge */
+
+/* Semantic ink */
+--ink:       #0D2137   /* Teks utama */
+--ink2:      #2E4A5F   /* Teks sekunder */
+--ink3:      #5C7A8A   /* Teks tersier */
+--ink4:      #8FA4B0   /* Teks placeholder */
+
+/* Border */
+--border:    #D8E4E0
+--border2:   #C2D6D0
+```
+
+### Responsive Utilities (Aloha-style)
+
+```css
+.d-mobile  { display: none !important; }   /* Hidden di desktop */
+.d-desktop { display: flex !important; }   /* Visible di desktop */
+
+@media (max-width: 900px) {
+  .d-mobile  { display: flex !important; }
+  .d-desktop { display: none !important; }
+}
+```
+
+---
+
+## JavaScript
+
+Semua logika ditulis dengan jQuery 3.7.0 mengikuti pola Aloha Browser (global `onclick` handlers, `$(document).ready()`). Tidak ada module system, tidak ada event delegation abstraction.
+
+### Fungsi Global (`onclick` pattern)
+
+```javascript
+openNav()          // Buka mobile sidenav
+closeNav()         // Tutup mobile sidenav
+jumpToSection(id)  // Smooth scroll ke section ID
+setRating(val)     // Set star rating (1–5)
+switchTab(panel, btn)  // Ganti tab Video/Dokumen
+goToUPFStep(n)     // Navigasi ke step Unit Plan Builder
+upfNext()          // Step berikutnya di wizard
+upfBack()          // Step sebelumnya di wizard
+upfSubmit()        // Validasi + generate + download RPM
+submitQA()         // Kirim pertanyaan Q&A
+submitFeedback()   // Kirim umpan balik
+```
+
+### Fungsi Internal
+
+```javascript
+upfGoTo(step)              // Core wizard navigation
+generateUnitPlanText(data) // Render RPM sebagai plain text
+downloadFile(filename, text) // Trigger browser download via data URI
+```
+
+### Scroll Listeners
+
+Satu `$(window).on('scroll.sekolahmania')` handler mengelola:
+- Nav background opacity
+- Progress strip show/hide
+- 6-segment progress bar fill
+- Back-to-top visibility
+- Active nav link highlighting (per section)
+
+### Intersection Observer
+
+Digunakan untuk **scroll reveal animations** (`class="reveal"`) — 67 elemen. Menggunakan `threshold: 0.1` dan `rootMargin: '0px 0px -32px 0px'`. Fallback untuk browser lama: `$('.reveal').addClass('visible')`.
+
+---
+
+## Formulir & Backend (Supabase)
+
+Saat ini semua form menggunakan `console.log()` sebagai stub. Untuk production, ganti dengan Supabase REST API:
+
+### Setup Supabase
+
+```javascript
+// Di bagian atas script
+var SUPABASE_URL  = 'https://YOUR_PROJECT.supabase.co';
+var SUPABASE_ANON = 'YOUR_ANON_KEY';
+```
+
+### Buat 3 Tabel di Supabase
+
+```sql
+-- Pertanyaan Q&A
+create table questions (
+  id         uuid default gen_random_uuid() primary key,
+  name       text not null,
+  school     text,
+  subject    text,
+  message    text not null,
+  created_at timestamptz default now()
+);
+
+-- Umpan Balik
+create table feedback (
+  id         uuid default gen_random_uuid() primary key,
+  name       text not null,
+  school     text,
+  session    text,
+  rating     int check (rating between 1 and 5),
+  message    text not null,
+  created_at timestamptz default now()
+);
+
+-- Unit Plans
+create table unit_plans (
+  id           uuid default gen_random_uuid() primary key,
+  mapel        text,
+  kelas        text,
+  waktu        text,
+  profil       text,
+  tujuan       text not null,
+  topik        text,
+  pedagogi     text,
+  lingkungan   text,
+  mitra        text,
+  memahami     text,
+  mengaplikasi text,
+  merefleksi   text,
+  as_awal      text,
+  as_proses    text,
+  as_akhir     text,
+  catatan      text,
+  dimensi      text[],
+  created_at   timestamptz default now()
+);
+
+-- Aktifkan RLS
+alter table questions  enable row level security;
+alter table feedback   enable row level security;
+alter table unit_plans enable row level security;
+
+-- Izinkan insert anonim
+create policy "Allow anon insert" on questions  for insert with check (true);
+create policy "Allow anon insert" on feedback   for insert with check (true);
+create policy "Allow anon insert" on unit_plans for insert with check (true);
+```
+
+### Aktifkan Fetch di Script
+
+Cari komentar `// Supabase stub:` di `sekolahmania.html` dan uncomment blok `fetch()` di setiap fungsi submit.
+
+---
+
+## Internasionalisasi (i18n)
+
+Menggunakan pola **SEO-safe `data-i18n` fallback** dari Aloha Browser:
+
+```html
+<!-- Teks default (Bahasa Indonesia) ada langsung di HTML — bisa di-crawl mesin pencari -->
+<span class="progress-label" data-i18n="progress_label">Progress Modul</span>
+```
+
+```javascript
+// Loader locale (uncomment untuk aktivasi):
+var lang = navigator.language.slice(0, 2) || 'id';
+$.getJSON('/js/i18n/' + lang + '.json?1', function(strings) {
+  $('[data-i18n]').each(function() {
+    var key = $(this).data('i18n');
+    if (strings[key]) $(this).text(strings[key]);
+  });
+});
+```
+
+Buat file `/js/i18n/en.json` untuk support bilingual Indonesia–Inggris (target wisatawan di platform NusaBaliConnect jika diintegrasikan).
+
+---
+
+## Deployment
+
+### Vercel (Rekomendasi)
+
+```bash
+# 1. Push ke GitHub
+git init && git add . && git commit -m "init: SekolahMania v1"
+git remote add origin https://github.com/USERNAME/sekolahmania.git
+git push -u origin main
+
+# 2. Import di vercel.com → New Project → pilih repo
+# 3. Build settings: Output Directory = . (root), no build command
+```
+
+### Plausible Analytics Proxy (Aloha Takeaway #3)
+
+Tambahkan ke `vercel.json` agar analytics tidak diblok adblocker:
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/stats/api/event",
+      "destination": "https://plausible.io/api/event"
+    },
+    {
+      "source": "/stats/script.js",
+      "destination": "https://plausible.io/js/script.js"
+    }
+  ]
+}
+```
+
+Lalu ubah script Plausible di HTML:
+
+```html
+<script defer data-domain="sekolahmania.com"
+  data-api="/stats/api/event"
+  src="/stats/script.js"></script>
+```
+
+### Cache Headers (nginx / Vercel)
+
+```nginx
+# File dengan content-hash (images, fonts) — cache permanen
+location ~* \.(webp|png|woff2)$ {
+  expires 1y;
+  add_header Cache-Control "public, immutable";
+}
+
+# HTML — jangan cache (selalu fresh)
+location ~* \.html$ {
+  expires -1;
+  add_header Cache-Control "no-cache, no-store";
+}
+```
+
+### Cache-Busting Manual (Aloha pattern)
+
+Setiap kali mengubah `scripts.js` atau file i18n, naikkan querystring integer:
+
+```html
+<!-- Sebelum -->
+<script src="scripts.js?2"></script>
+
+<!-- Setelah update -->
+<script src="scripts.js?3"></script>
+```
+
+> Untuk production yang lebih robust, gunakan content-hash otomatis seperti yang direkomendasikan di Aloha Blueprint: `scripts.a3f92b.js`
+
+---
+
+## Roadmap
+
+### v1.0 — MVP ✅
+- [x] Landing page lengkap (11 sections)
+- [x] Unit Plan Builder 4-step wizard
+- [x] Media Hub (Video + Dokumen tabs)
+- [x] Q&A Form + Feedback Form
+- [x] Responsive mobile-first
+- [x] Progress strip + Back-to-top
+- [x] Supabase-ready stubs
+
+### v1.1 — Koneksi Backend
+- [ ] Aktifkan Supabase insert untuk Q&A, Feedback, Unit Plans
+- [ ] Admin dashboard sederhana (Supabase Studio / Next.js)
+- [ ] Email notifikasi ke pembicara saat ada pertanyaan masuk (Supabase Edge Functions)
+- [ ] Export Unit Plan ke PDF server-side (Puppeteer / WeasyPrint)
+
+### v1.2 — Konten & Media
+- [ ] Embed YouTube player nyata (iframe lazy-load)
+- [ ] Upload foto pembicara Ibu Ayuk Ratna Puspaningsih
+- [ ] `<picture>` WebP + PNG untuk semua gambar
+- [ ] `loading="lazy"` pada semua `<img>`
+- [ ] H5P embed aktif via iFrame
+
+### v1.3 — Fitur Lanjutan
+- [ ] i18n bilingual ID/EN (aktifkan loader)
+- [ ] Plausible analytics proxy
+- [ ] PWA manifest (`manifest.json`, service worker)
+- [ ] Pencarian materi (Fuse.js lightweight fuzzy search)
+- [ ] Mode gelap/terang toggle
+
+### v2.0 — Integrasi Ekosistem
+- [ ] Integrasi dengan **NusaBaliConnect** (tourism platform)
+- [ ] Modul untuk **Mai-Milu** community (carpooling community learning)
+- [ ] Multi-speaker support (lebih dari satu narasumber)
+- [ ] LMS sederhana: tracking progress per peserta
+
+---
+
+## Referensi Konten
+
+| Sumber | Keterangan |
+|---|---|
+| Kemendikdasmen RI | "Pembelajaran Mendalam: Menuju Pendidikan Bermutu untuk Semua" |
+| TPPM | Tim Pengembang Pembelajaran Mendalam, Puskorjar |
+| NPDL | Four Elements of Learning Design © 2018 Education in Motion |
+| John Biggs | SOLO Taxonomy — [johnbiggs.com.au](https://www.johnbiggs.com.au/academic/solo_taxonomy) |
+| Anderson & Krathwohl | Bloom's Taxonomy Revised, 2001 |
+| OECD | PISA 2022 Results |
+
+---
+
+## Lisensi
+
+Kode sumber: **MIT License** — bebas digunakan, dimodifikasi, dan didistribusikan untuk keperluan pendidikan.
+
+Konten pedagogis (materi PM, 8 Dimensi, kerangka pembelajaran) berasal dari dokumen resmi Kemendikdasmen RI dan tunduk pada ketentuan penggunaan yang berlaku.
+
+---
+
+<div align="center">
+
+Dibuat dengan ♥ untuk guru-guru Indonesia
+
+**SekolahMania.com** · Bali, Indonesia · 2026
+
+*Kontributor: Ayuk Ratna Puspaningsih — SMA Negeri Bali Mandara*
+
+</div>
