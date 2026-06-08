@@ -1,0 +1,3704 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="SekolahMania — Platform pelatihan guru STEM interaktif untuk sekolah menengah Indonesia. Pembelajaran Mendalam bersama Ayuk Ratna Puspaningsih."/>
+<meta name="theme-color" content="#0D2137"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta property="og:title" content="SekolahMania — Pembelajaran Mendalam STEM"/>
+<meta property="og:description" content="Platform pelatihan guru STEM interaktif. Pembelajaran Mendalam bersama Ayuk Ratna Puspaningsih — SMA Negeri Bali Mandara."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://sekolahmania.com"/>
+<title>SekolahMania — Pembelajaran Mendalam STEM</title>
+
+<!-- Fonts: Distinctive pairing — Fraunces (editorial serif display) + Figtree (clean humanist sans) -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,300;1,9..144,700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<!-- jQuery 3.7.0 via CDN with SRI (Aloha pattern) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+  integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUqN3XvQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  /* Core palette — deep teal & warm amber */
+  --navy:      #0D2137;
+  --teal:      #0E7C6E;
+  --teal-mid:  #14A090;
+  --teal-lt:   #3ECAB7;
+  --amber:     #F59D2A;
+  --amber-lt:  #FFD27F;
+  --cream:     #FBF8F3;
+  --cream2:    #F2EDE4;
+  --white:     #FFFFFF;
+  --ink:       #0D2137;
+  --ink2:      #2E4A5F;
+  --ink3:      #5C7A8A;
+  --ink4:      #8FA4B0;
+  --border:    #D8E4E0;
+  --border2:   #C2D6D0;
+
+  /* Fonts */
+  --display: 'Fraunces', Georgia, serif;
+  --body:    'Figtree', system-ui, sans-serif;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  /* Nav height for offset */
+  --nav-h: 68px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--cream);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+
+/* ═══════════════════════════════════════════
+   NOISE TEXTURE OVERLAY (aesthetic depth)
+═══════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  background: rgba(13, 33, 55, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(62, 202, 183, 0.15);
+  transition: background 0.3s;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-logo-mark {
+  width: 36px;
+  height: 36px;
+  background: var(--teal-mid);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+.nav-logo-text em {
+  color: var(--teal-lt);
+  font-style: italic;
+  font-weight: 300;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.01em;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--teal-lt); }
+
+.nav-cta {
+  background: var(--amber);
+  color: var(--navy) !important;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: var(--navy);
+  transition: background 0.2s, transform 0.15s !important;
+}
+.nav-cta:hover {
+  background: var(--amber-lt) !important;
+  color: var(--navy) !important;
+  transform: translateY(-1px);
+}
+
+/* Active nav state — set by JS scroll */
+.nav-links a.active {
+  color: var(--teal-lt);
+  position: relative;
+}
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--teal-lt);
+  border-radius: 2px;
+}
+
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px;
+}
+.nav-hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile sidenav */
+.sidenav {
+  position: fixed;
+  top: 0;
+  right: -280px;
+  width: 280px;
+  height: 100vh;
+  background: var(--navy);
+  z-index: 200;
+  padding: 80px 32px 32px;
+  transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+  border-left: 1px solid rgba(62,202,183,0.15);
+}
+.sidenav.open { right: 0; }
+.sidenav-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 36px; height: 36px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.5);
+  font-size: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  transition: color 0.2s;
+}
+.sidenav-close:hover { color: #fff; }
+.sidenav ul { list-style: none; }
+.sidenav ul li { border-bottom: 1px solid rgba(255,255,255,0.07); }
+.sidenav ul li a {
+  display: block;
+  padding: 14px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  transition: color 0.2s;
+}
+.sidenav ul li a:hover { color: var(--teal-lt); }
+.sidenav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 199;
+}
+.sidenav-overlay.visible { display: block; }
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  background: var(--navy);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative background shapes */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -80px;
+  width: 640px; height: 640px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14,124,110,0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -200px; left: -120px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,157,42,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Floating grid lines */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(62,202,183,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62,202,183,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.hero-left {
+  padding: 80px 60px 80px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(62,202,183,0.12);
+  border: 1px solid rgba(62,202,183,0.25);
+  border-radius: 100px;
+  padding: 6px 14px 6px 10px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.7s ease both;
+}
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--teal-lt);
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.4); }
+}
+.hero-eyebrow span {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--teal-lt);
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-size: clamp(38px, 4.5vw, 60px);
+  font-weight: 800;
+  line-height: 1.06;
+  color: #fff;
+  letter-spacing: -1.5px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.7s 0.1s ease both;
+}
+.hero-title .italic { font-style: italic; font-weight: 300; color: var(--teal-lt); }
+.hero-title .amber { color: var(--amber); }
+
+.hero-sub {
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.6);
+  max-width: 460px;
+  margin-bottom: 36px;
+  animation: fadeUp 0.7s 0.2s ease both;
+}
+.hero-sub strong { color: rgba(255,255,255,0.9); font-weight: 600; }
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.7s 0.3s ease both;
+  margin-bottom: 56px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 26px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border: none;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-primary {
+  background: var(--amber);
+  color: var(--navy);
+  box-shadow: 0 4px 20px rgba(245,157,42,0.35);
+}
+.btn-primary:hover { box-shadow: 0 8px 30px rgba(245,157,42,0.5); }
+.btn-outline {
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.4);
+  color: #fff;
+}
+
+/* Stats row */
+.hero-stats {
+  display: flex;
+  gap: 32px;
+  animation: fadeUp 0.7s 0.4s ease both;
+  padding-top: 32px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.stat-num {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-num .unit { font-size: 18px; color: var(--teal-lt); }
+.stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+/* Hero right — speaker card */
+.hero-right {
+  padding: 80px 80px 80px 40px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.speaker-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(62,202,183,0.2);
+  border-radius: 20px;
+  padding: 36px;
+  max-width: 380px;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  position: relative;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+.speaker-card::before {
+  content: 'PEMBICARA UTAMA';
+  position: absolute;
+  top: -12px; left: 24px;
+  background: var(--teal-mid);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  padding: 4px 12px;
+  border-radius: 100px;
+}
+
+.speaker-avatar-wrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin-bottom: 20px;
+}
+.speaker-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-mid) 100%);
+  border: 3px solid var(--teal-lt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  overflow: hidden;
+}
+.speaker-avatar-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px dashed rgba(62,202,183,0.3);
+  animation: rotateSlow 12s linear infinite;
+}
+@keyframes rotateSlow {
+  to { transform: rotate(360deg); }
+}
+
+.speaker-name {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.speaker-title {
+  font-size: 13px;
+  color: var(--teal-lt);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.speaker-school {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 20px;
+  font-family: var(--mono);
+}
+
+.speaker-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.topic-tag {
+  background: rgba(62,202,183,0.12);
+  border: 1px solid rgba(62,202,183,0.25);
+  color: var(--teal-lt);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.speaker-pm-badge {
+  background: linear-gradient(135deg, rgba(14,124,110,0.4), rgba(62,202,183,0.2));
+  border: 1px solid rgba(62,202,183,0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pm-badge-icon {
+  width: 36px; height: 36px;
+  background: var(--teal-mid);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.pm-badge-text {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.4;
+}
+.pm-badge-text strong {
+  display: block;
+  font-size: 13px;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 1px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   PROGRAM RIBBON
+═══════════════════════════════════════════ */
+.program-ribbon {
+  background: var(--teal);
+  padding: 20px 0;
+  overflow: hidden;
+}
+.ribbon-track {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  animation: scrollX 20s linear infinite;
+}
+.ribbon-track:hover { animation-play-state: paused; }
+@keyframes scrollX {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.ribbon-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+.ribbon-sep { color: var(--teal-lt); opacity: 0.6; font-size: 8px; }
+
+/* ═══════════════════════════════════════════
+   SECTION SHARED
+═══════════════════════════════════════════ */
+.section {
+  padding: 100px 0;
+}
+.section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 14px;
+}
+.section-kicker::before {
+  content: '';
+  display: block;
+  width: 20px; height: 2px;
+  background: var(--teal-mid);
+  border-radius: 2px;
+}
+.section-heading {
+  font-family: var(--display);
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+}
+.section-heading .italic {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--teal);
+}
+.section-lead {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--ink2);
+  max-width: 580px;
+  margin-bottom: 56px;
+}
+
+/* ═══════════════════════════════════════════
+   PEMBELAJARAN MENDALAM SECTION
+═══════════════════════════════════════════ */
+.pm-section { background: var(--cream); }
+
+.pm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.pm-diagram {
+  position: relative;
+}
+
+/* Concentric rings diagram */
+.rings-wrap {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  margin: 0 auto;
+}
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ring-1 {
+  inset: 0;
+  border-color: rgba(14,124,110,0.15);
+  background: rgba(14,124,110,0.04);
+}
+.ring-2 {
+  inset: 40px;
+  border-color: rgba(14,124,110,0.25);
+  background: rgba(14,124,110,0.06);
+}
+.ring-3 {
+  inset: 80px;
+  border-color: rgba(14,124,110,0.35);
+  background: rgba(14,124,110,0.1);
+}
+.ring-core {
+  inset: 120px;
+  border: none;
+  background: linear-gradient(135deg, var(--teal), var(--teal-mid));
+  box-shadow: 0 0 40px rgba(14,124,110,0.4);
+  flex-direction: column;
+  text-align: center;
+}
+.ring-core-text {
+  font-family: var(--display);
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+/* Labels around rings */
+.ring-labels {
+  position: absolute;
+  inset: 0;
+}
+.ring-label {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  white-space: nowrap;
+}
+.ring-label.top    { top: -24px; left: 50%; transform: translateX(-50%); }
+.ring-label.right  { right: -60px; top: 50%; transform: translateY(-50%); }
+.ring-label.bottom { bottom: -24px; left: 50%; transform: translateX(-50%); }
+.ring-label.left   { left: -50px; top: 50%; transform: translateY(-50%); }
+
+.pm-principles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pm-principle {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  cursor: default;
+}
+.pm-principle:hover {
+  border-color: var(--teal-lt);
+  box-shadow: 0 4px 24px rgba(14,124,110,0.1);
+  transform: translateX(4px);
+}
+.pm-principle-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.pm-principle-icon.blue  { background: rgba(14,124,110,0.1); }
+.pm-principle-icon.amber { background: rgba(245,157,42,0.12); }
+.pm-principle-icon.teal  { background: rgba(62,202,183,0.12); }
+.pm-principle-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.pm-principle-desc {
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.6;
+}
+
+/* Pillars below */
+.pm-pillars {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.pillar-card {
+  background: var(--navy);
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+.pillar-card:hover { transform: translateY(-4px); }
+.pillar-icon { font-size: 28px; margin-bottom: 10px; }
+.pillar-name {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.pillar-name em { color: var(--teal-lt); font-style: italic; }
+.pillar-desc {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════════
+   PISA DATA SECTION
+═══════════════════════════════════════════ */
+.pisa-section {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.pisa-section::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(14,124,110,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.pisa-section .section-heading { color: #fff; }
+.pisa-section .section-lead { color: rgba(255,255,255,0.55); }
+.pisa-section .section-kicker { color: var(--teal-lt); }
+.pisa-section .section-kicker::before { background: var(--teal-lt); }
+
+.pisa-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.pisa-big-stat {
+  text-align: center;
+  padding: 40px;
+  border: 1px solid rgba(62,202,183,0.2);
+  border-radius: 20px;
+  background: rgba(255,255,255,0.03);
+}
+.pisa-pct {
+  font-family: var(--display);
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: -3px;
+  margin-bottom: 8px;
+}
+.pisa-pct .sup { font-size: 36px; vertical-align: super; color: var(--amber); }
+.pisa-pct-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.5;
+}
+
+.pisa-bars { display: flex; flex-direction: column; gap: 20px; }
+
+.pisa-bar-row {}
+.pisa-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.pisa-bar-subject {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+}
+.pisa-bar-hots {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--amber);
+}
+.bar-track {
+  height: 10px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  position: relative;
+}
+.bar-fill.lots {
+  background: linear-gradient(90deg, var(--teal-mid) 0%, var(--teal-lt) 100%);
+}
+.bar-fill.hots {
+  background: var(--amber);
+}
+
+/* Stacked bar  */
+.pisa-stack-row {
+  display: flex;
+  gap: 3px;
+  height: 12px;
+  border-radius: 100px;
+  overflow: hidden;
+}
+.stack-seg {
+  height: 100%;
+  border-radius: 2px;
+  transition: opacity 0.2s;
+}
+.stack-seg:hover { opacity: 0.8; }
+.stack-seg.lv1 { background: #3ECAB7; }
+.stack-seg.lv2 { background: #A8E6DD; }
+.stack-seg.lv3 { background: #F5A623; }
+.stack-seg.lv4 { background: #E05252; }
+
+.pisa-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  font-family: var(--mono);
+}
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   KURIKULUM / MODULE SECTION
+═══════════════════════════════════════════ */
+.modules-section { background: var(--cream2); }
+
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.module-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.module-card:hover {
+  border-color: var(--teal-lt);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(14,124,110,0.12);
+}
+
+.module-header {
+  padding: 24px;
+  position: relative;
+}
+.module-header.teal  { background: linear-gradient(135deg, var(--teal) 0%, var(--teal-mid) 100%); }
+.module-header.navy  { background: var(--navy); }
+.module-header.amber { background: linear-gradient(135deg, #C47A0E 0%, var(--amber) 100%); }
+
+.module-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+.module-title {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 0;
+}
+.module-emoji {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-size: 32px;
+  opacity: 0.6;
+}
+
+.module-body {
+  padding: 20px 24px 24px;
+}
+.module-desc {
+  font-size: 13px;
+  color: var(--ink3);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+.module-topics { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.module-topics li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+.module-topics li::before {
+  content: '';
+  display: block;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--teal-mid);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   PROFIL LULUSAN — 8 DIMENSI SECTION
+═══════════════════════════════════════════ */
+.dimensi-section { background: var(--cream); }
+
+.dimensi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.dimensi-card {
+  padding: 22px 20px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.dimensi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--teal-lt));
+}
+.dimensi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(14,124,110,0.1);
+}
+.dimensi-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink4);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.dimensi-icon { font-size: 22px; margin-bottom: 8px; }
+.dimensi-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.dimensi-desc {
+  font-size: 12px;
+  color: var(--ink3);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════════
+   H5P ACTIVITY SECTION
+═══════════════════════════════════════════ */
+.activity-section {
+  background: var(--navy);
+  position: relative;
+}
+.activity-section .section-heading { color: #fff; }
+.activity-section .section-lead { color: rgba(255,255,255,0.55); }
+.activity-section .section-kicker { color: var(--amber-lt); }
+.activity-section .section-kicker::before { background: var(--amber); }
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.activity-card {
+  border: 1px solid rgba(62,202,183,0.15);
+  border-radius: 14px;
+  padding: 24px;
+  background: rgba(255,255,255,0.03);
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+.activity-card:hover {
+  border-color: rgba(62,202,183,0.35);
+  background: rgba(255,255,255,0.05);
+}
+.activity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245,157,42,0.15);
+  border: 1px solid rgba(245,157,42,0.3);
+  border-radius: 100px;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--amber-lt);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.activity-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.4px;
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+.activity-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+.activity-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.activity-features li {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.activity-features li::before {
+  content: '✓';
+  display: inline-block;
+  width: 16px; height: 16px;
+  background: rgba(62,202,183,0.15);
+  border-radius: 50%;
+  color: var(--teal-lt);
+  font-size: 9px;
+  line-height: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   LEARNING FLOW SECTION
+═══════════════════════════════════════════ */
+.flow-section { background: var(--cream2); }
+
+.flow-steps-horiz {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+
+.flow-steps-horiz::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--teal), var(--teal-lt), var(--teal));
+  z-index: 0;
+}
+
+.flow-step-v {
+  text-align: center;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.flow-step-num {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.flow-step-num.memahami {
+  background: linear-gradient(135deg, var(--teal) 0%, var(--teal-mid) 100%);
+  box-shadow: 0 4px 24px rgba(14,124,110,0.35);
+}
+.flow-step-num.mengaplikasi {
+  background: linear-gradient(135deg, #C47A0E 0%, var(--amber) 100%);
+  box-shadow: 0 4px 24px rgba(245,157,42,0.35);
+}
+.flow-step-num.merefleksi {
+  background: linear-gradient(135deg, #1A3D8A 0%, #3B6ED4 100%);
+  box-shadow: 0 4px 24px rgba(59,110,212,0.35);
+}
+
+.flow-step-num-inner {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.flow-step-title {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.flow-step-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 12px;
+}
+.flow-step-desc {
+  font-size: 13.5px;
+  color: var(--ink3);
+  line-height: 1.65;
+}
+
+/* ═══════════════════════════════════════════
+   FEEDBACK / CTA SECTION
+═══════════════════════════════════════════ */
+.cta-section {
+  background: linear-gradient(135deg, var(--navy) 0%, #0A2D3F 50%, #0D3B2E 100%);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -150px;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(62,202,183,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.cta-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 40px;
+  text-align: center;
+}
+.cta-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal-lt);
+  margin-bottom: 20px;
+}
+.cta-heading {
+  font-family: var(--display);
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 16px;
+}
+.cta-heading em { font-style: italic; font-weight: 300; color: var(--amber-lt); }
+.cta-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+/* Feedback form */
+.feedback-form {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(62,202,183,0.2);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: left;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.form-field { display: flex; flex-direction: column; gap: 6px; }
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.04em;
+}
+.form-input, .form-select, .form-textarea {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.25); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--teal-lt);
+}
+.form-select { appearance: none; cursor: pointer; }
+.form-select option { background: var(--navy); color: #fff; }
+.form-textarea {
+  resize: vertical;
+  min-height: 90px;
+  margin-bottom: 14px;
+}
+.form-rating {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.rating-star {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.15s, border-color 0.15s;
+  user-select: none;
+}
+.rating-star.active, .rating-star:hover {
+  background: rgba(245,157,42,0.2);
+  border-color: var(--amber);
+}
+.form-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--amber);
+  color: var(--navy);
+  border: none;
+  border-radius: 10px;
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.form-submit:hover {
+  background: var(--amber-lt);
+  transform: translateY(-1px);
+}
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 24px;
+  color: var(--teal-lt);
+  font-size: 15px;
+}
+
+/* ═══════════════════════════════════════════
+   Q&A SECTION
+═══════════════════════════════════════════ */
+.qa-section { background: var(--cream); }
+
+.qa-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.qa-form-wrap {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+}
+.qa-form-title {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+.qa-form-sub {
+  font-size: 13px;
+  color: var(--ink3);
+  margin-bottom: 24px;
+}
+.qa-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.qa-input:focus { border-color: var(--teal-mid); }
+.qa-textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.qa-textarea:focus { border-color: var(--teal-mid); }
+.qa-submit {
+  padding: 12px 28px;
+  background: var(--teal);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--body);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.qa-submit:hover { background: var(--teal-mid); }
+
+.qa-sidebar-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+}
+.qa-tip {
+  background: rgba(14,124,110,0.08);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--teal-mid);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.qa-tip-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--teal);
+  margin-bottom: 4px;
+}
+.qa-tip-text {
+  font-size: 12.5px;
+  color: var(--ink3);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+.footer {
+  background: var(--navy);
+  padding: 48px 40px 32px;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 32px;
+}
+.footer-brand-name {
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.footer-brand-name em { color: var(--teal-lt); font-style: italic; font-weight: 300; }
+.footer-brand-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.65;
+  max-width: 280px;
+  margin-bottom: 20px;
+}
+.footer-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+.footer-badge {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.05em;
+}
+.footer-col-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 16px;
+  font-family: var(--mono);
+}
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 10px; }
+.footer-col ul li a {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.55);
+  transition: color 0.2s;
+}
+.footer-col ul li a:hover { color: var(--teal-lt); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+}
+.footer-stack {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer-stack span {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.08em;
+}
+.footer-stack-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+}
+
+/* ═══════════════════════════════════════════
+   SCROLL ANIMATIONS (Intersection Observer)
+═══════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════
+   UNIT PLAN BUILDER SECTION
+═══════════════════════════════════════════ */
+.builder-section { background: var(--cream); }
+
+.builder-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.builder-intro {}
+.builder-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 32px;
+}
+.builder-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid transparent;
+}
+.builder-step.active {
+  background: rgba(14,124,110,0.08);
+  border-color: var(--border2);
+}
+.builder-step:hover:not(.active) { background: rgba(14,124,110,0.04); }
+.bs-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.builder-step:not(.active) .bs-dot {
+  background: var(--border2);
+  color: var(--ink4);
+}
+.bs-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 3px;
+}
+.builder-step:not(.active) .bs-title { color: var(--ink3); font-weight: 500; }
+.bs-desc {
+  font-size: 12.5px;
+  color: var(--ink3);
+  line-height: 1.55;
+}
+
+/* Unit plan form wizard */
+.unit-plan-form {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 32px rgba(13,33,55,0.07);
+}
+.upf-header {
+  background: var(--navy);
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.upf-header-title {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+.upf-progress {
+  display: flex;
+  gap: 4px;
+}
+.upf-prog-dot {
+  width: 24px; height: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.15);
+  transition: background 0.3s;
+}
+.upf-prog-dot.done { background: var(--teal-lt); }
+.upf-prog-dot.active { background: var(--amber); }
+
+.upf-body { padding: 28px; }
+
+.upf-step { display: none; }
+.upf-step.active { display: block; }
+.upf-step-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--teal);
+  font-family: var(--mono);
+  margin-bottom: 16px;
+}
+.upf-field { margin-bottom: 16px; }
+.upf-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink3);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.upf-input, .upf-select, .upf-textarea {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background: var(--cream);
+}
+.upf-input:focus, .upf-select:focus, .upf-textarea:focus {
+  border-color: var(--teal-mid);
+  box-shadow: 0 0 0 3px rgba(14,124,110,0.08);
+  background: var(--white);
+}
+.upf-textarea { min-height: 80px; resize: vertical; }
+.upf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Dimensi checkbox grid */
+.dimensi-checks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 4px;
+}
+.dimensi-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  user-select: none;
+  font-size: 12.5px;
+  color: var(--ink2);
+}
+.dimensi-check-item:hover { border-color: var(--teal-lt); background: rgba(14,124,110,0.04); }
+.dimensi-check-item input { accent-color: var(--teal); }
+.dimensi-check-item.checked {
+  border-color: var(--teal-mid);
+  background: rgba(14,124,110,0.07);
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.upf-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.upf-btn-back, .upf-btn-next {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: var(--body);
+  transition: background 0.2s, transform 0.15s;
+}
+.upf-btn-back:hover, .upf-btn-next:hover { transform: translateY(-1px); }
+.upf-btn-back {
+  background: var(--cream2);
+  color: var(--ink3);
+  border: 1px solid var(--border);
+}
+.upf-btn-back:hover { background: var(--border); }
+.upf-btn-next {
+  background: var(--teal);
+  color: #fff;
+}
+.upf-btn-next:hover { background: var(--teal-mid); }
+.upf-btn-submit {
+  background: var(--amber);
+  color: var(--navy);
+  font-weight: 700;
+}
+.upf-btn-submit:hover { background: var(--amber-lt); }
+
+.upf-step-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink4);
+  letter-spacing: 0.08em;
+}
+
+/* ═══════════════════════════════════════════
+   MEDIA HUB SECTION
+═══════════════════════════════════════════ */
+.media-section { background: var(--cream2); }
+
+.media-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  width: fit-content;
+  margin-bottom: 36px;
+}
+.media-tab {
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  color: var(--ink3);
+  border: none;
+  background: transparent;
+  font-family: var(--body);
+}
+.media-tab.active {
+  background: var(--white);
+  color: var(--navy);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+}
+.media-tab:hover:not(.active) { color: var(--ink); }
+
+.media-panel { display: none; }
+.media-panel.active { display: block; }
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.video-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.video-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(13,33,55,0.1);
+}
+.video-thumb {
+  aspect-ratio: 16/9;
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-thumb-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+  opacity: 0.8;
+}
+.video-play-btn {
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  z-index: 1;
+  border: 2px solid rgba(255,255,255,0.3);
+  transition: background 0.2s, transform 0.2s;
+  font-size: 18px;
+}
+.video-card:hover .video-play-btn {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.1);
+}
+.video-thumb-label {
+  position: absolute;
+  bottom: 8px; left: 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.3);
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+.video-info { padding: 14px 16px; }
+.video-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+.video-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink4);
+  letter-spacing: 0.05em;
+}
+
+/* Drive files grid */
+.drive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.drive-item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+}
+.drive-item:hover {
+  border-color: var(--teal-lt);
+  box-shadow: 0 4px 16px rgba(14,124,110,0.08);
+}
+.drive-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.drive-icon.pdf { background: rgba(220,50,50,0.1); }
+.drive-icon.doc { background: rgba(26,100,220,0.1); }
+.drive-icon.sheet { background: rgba(14,124,110,0.1); }
+.drive-icon.ppt { background: rgba(245,157,42,0.12); }
+.drive-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+.drive-size {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink4);
+  letter-spacing: 0.05em;
+}
+
+/* ═══════════════════════════════════════════
+   PROGRESS / COMPLETION TRACKER
+═══════════════════════════════════════════ */
+.progress-strip {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 40px;
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 50;
+}
+.progress-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.progress-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink4);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.progress-modules {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+.prog-mod {
+  flex: 1;
+  min-width: 60px;
+  height: 6px;
+  background: var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.15s;
+}
+.prog-mod:hover { transform: scaleY(1.4); }
+.prog-mod-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--teal), var(--teal-lt));
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.prog-mod.complete .prog-mod-fill { background: var(--amber); }
+.progress-pct {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--teal);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
+   BACK-TO-TOP BUTTON
+═══════════════════════════════════════════ */
+.back-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px; height: 44px;
+  background: var(--navy);
+  border: 1px solid rgba(62,202,183,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--teal-lt);
+  z-index: 90;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.3s, transform 0.3s;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+.back-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.back-top:hover {
+  background: var(--teal);
+  border-color: var(--teal-lt);
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — additions
+═══════════════════════════════════════════ */
+.d-mobile { display: none !important; }
+.d-desktop { display: flex !important; }
+
+@media (max-width: 900px) {
+  .d-mobile  { display: flex !important; }
+  .d-desktop { display: none !important; }
+
+  .nav { padding: 0 20px; }
+  .nav-hamburger { display: flex; }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: var(--nav-h);
+  }
+  .hero-left {
+    padding: 48px 24px 32px;
+    order: 1;
+  }
+  .hero-right {
+    padding: 32px 24px 48px;
+    order: 2;
+  }
+  .hero-stats { gap: 20px; }
+  .speaker-card { max-width: 100%; }
+
+  .pm-grid { grid-template-columns: 1fr; }
+  .rings-wrap { display: none; }
+
+  .pm-pillars { grid-template-columns: repeat(2, 1fr); }
+  .pisa-layout { grid-template-columns: 1fr; }
+  .modules-grid { grid-template-columns: 1fr; }
+  .dimensi-grid { grid-template-columns: repeat(2, 1fr); }
+  .activity-grid { grid-template-columns: 1fr; }
+  .flow-steps-horiz { grid-template-columns: 1fr; gap: 32px; }
+  .flow-steps-horiz::before { display: none; }
+  .builder-layout { grid-template-columns: 1fr; }
+  .video-grid { grid-template-columns: 1fr; }
+  .drive-grid { grid-template-columns: 1fr; }
+  .upf-row { grid-template-columns: 1fr; }
+  .dimensi-checks { grid-template-columns: 1fr; }
+  .progress-strip { padding: 14px 20px; position: static; }
+  .back-top { bottom: 20px; right: 20px; width: 40px; height: 40px; }
+  .media-tabs { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     PROGRESS STRIP (sticky — shows after scrolling)
+══════════════════════════════ -->
+<div class="progress-strip" id="progressStrip" style="display:none;">
+  <div class="progress-inner">
+    <span class="progress-label" data-i18n="progress_label">Progress Modul</span>
+    <div class="progress-modules">
+      <div class="prog-mod" title="Modul 01 — Pendahuluan" onclick="jumpToSection('materi')"><div class="prog-mod-fill" style="width:0%"></div></div>
+      <div class="prog-mod" title="Modul 02 — Kerangka PM" onclick="jumpToSection('materi')"><div class="prog-mod-fill" style="width:0%"></div></div>
+      <div class="prog-mod" title="Modul 03 — 8 Dimensi" onclick="jumpToSection('dimensi')"><div class="prog-mod-fill" style="width:0%"></div></div>
+      <div class="prog-mod" title="Modul 04 — Pengalaman Belajar" onclick="jumpToSection('alur')"><div class="prog-mod-fill" style="width:0%"></div></div>
+      <div class="prog-mod" title="Modul 05 — Implementasi" onclick="jumpToSection('aktivitas')"><div class="prog-mod-fill" style="width:0%"></div></div>
+      <div class="prog-mod" title="Modul 06 — Peran Guru" onclick="jumpToSection('aktivitas')"><div class="prog-mod-fill" style="width:0%"></div></div>
+    </div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     BACK TO TOP
+══════════════════════════════ -->
+<div class="back-top" id="backTop" onclick="$('html,body').animate({scrollTop:0},400)" title="Kembali ke atas">↑</div>
+
+
+<nav class="nav" id="mainNav">
+  <a class="nav-logo" href="#" onclick="return false;">
+    <div class="nav-logo-mark">S</div>
+    <span class="nav-logo-text">Sekolah<em>Mania</em></span>
+  </a>
+
+  <!-- Desktop nav -->
+  <ul class="nav-links d-desktop" id="desktopNav">
+    <li><a href="#tentang">Tentang</a></li>
+    <li><a href="#materi">Materi</a></li>
+    <li><a href="#dimensi">Profil Lulusan</a></li>
+    <li><a href="#unitplan">Unit Plan</a></li>
+    <li><a href="#media">Media</a></li>
+    <li><a href="#tanya" class="nav-cta">Kirim Pertanyaan →</a></li>
+  </ul>
+
+  <!-- Mobile hamburger -->
+  <div class="nav-hamburger d-mobile" id="hamburger" onclick="openNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Sidenav (Aloha-style DOM-duplicate) -->
+<div class="sidenav-overlay" id="sidenavOverlay" onclick="closeNav()"></div>
+<div class="sidenav" id="sidenav">
+  <div class="sidenav-close" onclick="closeNav()">✕</div>
+  <ul>
+    <li><a href="#tentang" onclick="closeNav()">Tentang Program</a></li>
+    <li><a href="#materi" onclick="closeNav()">Materi PM</a></li>
+    <li><a href="#dimensi" onclick="closeNav()">8 Dimensi</a></li>
+    <li><a href="#aktivitas" onclick="closeNav()">Aktivitas STEM</a></li>
+    <li><a href="#unitplan" onclick="closeNav()">Unit Plan Builder</a></li>
+    <li><a href="#media" onclick="closeNav()">Media &amp; Dokumen</a></li>
+    <li><a href="#alur" onclick="closeNav()">Alur Belajar</a></li>
+    <li><a href="#tanya" onclick="closeNav()">Tanya Jawab</a></li>
+    <li><a href="#feedback" onclick="closeNav()">Umpan Balik</a></li>
+  </ul>
+</div>
+
+
+<!-- ══════════════════════════════
+     HERO
+══════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-grid"></div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      <span>Pelatihan Guru STEM — Bali, 2026</span>
+    </div>
+
+    <h1 class="hero-title">
+      Pembelajaran<br/>
+      <span class="italic">Mendalam</span><br/>
+      <span class="amber">Menuju STEM</span>
+    </h1>
+
+    <p class="hero-sub">
+      Platform pelatihan interaktif untuk guru SMA/MA Indonesia. Dalami pendekatan
+      <strong>Berkesadaran, Bermakna, dan Menggembirakan</strong> melalui modul
+      H5P, video, dan diskusi langsung bersama pembicara ahli.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#materi" class="btn btn-primary">
+        Mulai Belajar →
+      </a>
+      <a href="#tentang" class="btn btn-outline">
+        Tentang Program
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">5<span class="unit">×</span></div>
+        <div class="stat-label">Modul Interaktif</div>
+      </div>
+      <div>
+        <div class="stat-num">8</div>
+        <div class="stat-label">Dimensi Profil Lulusan</div>
+      </div>
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">Pengalaman Belajar</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="speaker-card">
+      <div class="speaker-avatar-wrap">
+        <div class="speaker-avatar">A</div>
+        <div class="speaker-avatar-ring"></div>
+      </div>
+
+      <div class="speaker-name">Ayuk Ratna<br/>Puspaningsih</div>
+      <div class="speaker-title">Guru Biologi · Fasilitator STEM</div>
+      <div class="speaker-school">SMA Negeri Bali Mandara</div>
+
+      <div class="speaker-topics">
+        <span class="topic-tag">Biologi</span>
+        <span class="topic-tag">STEM</span>
+        <span class="topic-tag">Pembelajaran Mendalam</span>
+        <span class="topic-tag">Inkuiri</span>
+      </div>
+
+      <div class="speaker-pm-badge">
+        <div class="pm-badge-icon">🌿</div>
+        <div class="pm-badge-text">
+          <strong>Pendekatan PM Holistik</strong>
+          Olah Pikir · Olah Hati · Olah Rasa · Olah Raga
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════
+     PROGRAM RIBBON
+══════════════════════════════ -->
+<div class="program-ribbon" aria-hidden="true">
+  <div class="ribbon-track" id="ribbonTrack">
+    <span class="ribbon-item">🎓 Pembelajaran Mendalam</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🔬 STEM Education</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">💡 Inkuiri Ilmiah</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🇮🇩 Kemendikdasmen RI</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">📊 PISA 2022</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🏫 SMA Negeri Bali Mandara</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🌱 Profil Lulusan</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">✨ Berkesadaran · Bermakna · Menggembirakan</span>
+    <span class="ribbon-sep">◆</span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ribbon-item">🎓 Pembelajaran Mendalam</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🔬 STEM Education</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">💡 Inkuiri Ilmiah</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🇮🇩 Kemendikdasmen RI</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">📊 PISA 2022</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🏫 SMA Negeri Bali Mandara</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">🌱 Profil Lulusan</span>
+    <span class="ribbon-sep">◆</span>
+    <span class="ribbon-item">✨ Berkesadaran · Bermakna · Menggembirakan</span>
+    <span class="ribbon-sep">◆</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     SECTION — PEMBELAJARAN MENDALAM
+══════════════════════════════ -->
+<section class="section pm-section" id="tentang">
+  <div class="section-inner">
+    <div class="pm-grid">
+      <!-- Left: diagram -->
+      <div class="pm-diagram reveal">
+        <div class="rings-wrap">
+          <div class="ring ring-1">
+            <div class="ring-labels">
+              <span class="ring-label top">Kerangka Pembelajaran</span>
+              <span class="ring-label bottom">Dimensi Profil Lulusan</span>
+            </div>
+          </div>
+          <div class="ring ring-2">
+            <div class="ring-labels" style="inset:40px;">
+              <span class="ring-label left" style="left:-70px">Bermakna</span>
+              <span class="ring-label right" style="right:-75px">Berkesadaran</span>
+            </div>
+          </div>
+          <div class="ring ring-3"></div>
+          <div class="ring ring-core">
+            <div class="ring-core-text">Pembelajaran<br/>Mendalam</div>
+          </div>
+        </div>
+
+        <!-- Prinsip tags below diagram -->
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top: 28px;">
+          <span class="topic-tag" style="background:rgba(14,124,110,0.1);border-color:var(--border2);color:var(--teal);font-size:12px;">🧠 Berkesadaran</span>
+          <span class="topic-tag" style="background:rgba(14,124,110,0.1);border-color:var(--border2);color:var(--teal);font-size:12px;">✨ Bermakna</span>
+          <span class="topic-tag" style="background:rgba(14,124,110,0.1);border-color:var(--border2);color:var(--teal);font-size:12px;">😊 Menggembirakan</span>
+        </div>
+        <p style="font-size:12px;color:var(--ink4);text-align:center;margin-top:10px;font-family:var(--mono);">Diadaptasi dari Four Elements of Learning Design © 2018 NPDL</p>
+      </div>
+
+      <!-- Right: principles -->
+      <div>
+        <div class="section-kicker reveal">Tentang Program</div>
+        <h2 class="section-heading reveal reveal-delay-1">Apa itu <span class="italic">Pembelajaran</span> Mendalam?</h2>
+        <p class="section-lead reveal reveal-delay-2">
+          Pendekatan yang <strong>memuliakan</strong> setiap peserta didik, menekankan penciptaan
+          suasana belajar yang berkesadaran, bermakna, dan menggembirakan — melalui
+          olah pikir, olah hati, olah rasa, dan olah raga secara holistik.
+        </p>
+
+        <div class="pm-principles">
+          <div class="pm-principle reveal">
+            <div class="pm-principle-icon blue">🧠</div>
+            <div>
+              <div class="pm-principle-title">Berkesadaran</div>
+              <div class="pm-principle-desc">Peserta didik memahami tujuan pembelajaran, termotivasi secara intrinsik, dan aktif meregulasi strategi belajar mereka sendiri untuk mencapai tujuan.</div>
+            </div>
+          </div>
+          <div class="pm-principle reveal reveal-delay-1">
+            <div class="pm-principle-icon amber">✨</div>
+            <div>
+              <div class="pm-principle-title">Bermakna</div>
+              <div class="pm-principle-desc">Peserta didik merasakan relevansi pembelajaran dengan kehidupan nyata, mampu mengkonstruksi pengetahuan baru dari pengalaman sebelumnya.</div>
+            </div>
+          </div>
+          <div class="pm-principle reveal reveal-delay-2">
+            <div class="pm-principle-icon teal">😊</div>
+            <div>
+              <div class="pm-principle-title">Menggembirakan</div>
+              <div class="pm-principle-desc">Suasana belajar yang positif, menantang, dan memotivasi — peserta didik merasa dihargai dan terhubung secara emosional sehingga lebih mudah memahami materi.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 Pillars (Olah) -->
+    <div class="pm-pillars" style="margin-top:56px;">
+      <div class="pillar-card reveal">
+        <div class="pillar-icon">🧩</div>
+        <div class="pillar-name"><em>Olah</em> Pikir</div>
+        <div class="pillar-desc">Mengasah akal budi dan kemampuan kognitif: memahami, menganalisa, dan memecahkan masalah</div>
+      </div>
+      <div class="pillar-card reveal reveal-delay-1">
+        <div class="pillar-icon">❤️</div>
+        <div class="pillar-name"><em>Olah</em> Hati</div>
+        <div class="pillar-desc">Mengasah kepekaan batin, membentuk budi pekerti, menanamkan nilai moral dan spiritual</div>
+      </div>
+      <div class="pillar-card reveal reveal-delay-2">
+        <div class="pillar-icon">🎨</div>
+        <div class="pillar-name"><em>Olah</em> Rasa</div>
+        <div class="pillar-desc">Mengembangkan kepekaan estetika, empati, dan kemampuan menghargai keindahan</div>
+      </div>
+      <div class="pillar-card reveal reveal-delay-3">
+        <div class="pillar-icon">⚡</div>
+        <div class="pillar-name"><em>Olah</em> Raga</div>
+        <div class="pillar-desc">Menjaga kesehatan fisik, kekuatan tubuh, dan membentuk karakter melalui kegiatan jasmani</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — DATA PISA
+══════════════════════════════ -->
+<section class="section pisa-section" id="mengapa">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Mengapa PM Penting?</div>
+    <h2 class="section-heading reveal reveal-delay-1" style="max-width:520px;">Data PISA 2022: Tantangan <span class="italic">Nyata</span> Indonesia</h2>
+    <p class="section-lead reveal reveal-delay-2">Lebih dari 99% peserta didik Indonesia hanya mampu menjawab soal LOTS (Level 1–3). Pembelajaran Mendalam hadir untuk membalik tren ini.</p>
+
+    <div class="pisa-layout reveal">
+      <!-- Big stat -->
+      <div class="pisa-big-stat">
+        <div class="pisa-pct"><span class="sup">&gt;</span>99<span class="sup">%</span></div>
+        <div class="pisa-pct-label">Murid hanya menjawab<br/>soal Level 1–3<br/><em style="color:var(--amber);">(LOTS)</em></div>
+        <div style="margin:20px 0; height:1px; background:rgba(255,255,255,0.08);"></div>
+        <div class="pisa-pct" style="font-size:48px;"><span class="sup">&lt;</span>1<span class="sup">%</span></div>
+        <div class="pisa-pct-label">Yang mampu Level 4–6<br/><em style="color:var(--teal-lt);">(HOTS)</em></div>
+      </div>
+
+      <!-- Stacked bars -->
+      <div class="pisa-bars">
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:8px;text-transform:uppercase;">Distribusi Level PISA 2022</div>
+
+        <div class="pisa-bar-row">
+          <div class="pisa-bar-meta">
+            <span class="pisa-bar-subject">📖 Membaca</span>
+            <span class="pisa-bar-hots">HOTS: 0.8%</span>
+          </div>
+          <div class="pisa-stack-row">
+            <div class="stack-seg lv1" style="width:74.5%;" title="Level 1: 74.5%"></div>
+            <div class="stack-seg lv2" style="width:19.3%;" title="Level 2: 19.3%"></div>
+            <div class="stack-seg lv3" style="width:5.4%;" title="Level 3: 5.4%"></div>
+            <div class="stack-seg lv4" style="width:0.8%;" title="Level 4-6: 0.8%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">
+            <span>74.5%</span><span>19.3%</span><span>5.4%</span><span>0.8%</span>
+          </div>
+        </div>
+
+        <div class="pisa-bar-row">
+          <div class="pisa-bar-meta">
+            <span class="pisa-bar-subject">🔢 Matematika</span>
+            <span class="pisa-bar-hots">HOTS: 0.4%</span>
+          </div>
+          <div class="pisa-stack-row">
+            <div class="stack-seg lv1" style="width:81.7%;"></div>
+            <div class="stack-seg lv2" style="width:14.1%;"></div>
+            <div class="stack-seg lv3" style="width:3.8%;"></div>
+            <div class="stack-seg lv4" style="width:0.4%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">
+            <span>81.7%</span><span>14.1%</span><span>3.8%</span><span>0.4%</span>
+          </div>
+        </div>
+
+        <div class="pisa-bar-row">
+          <div class="pisa-bar-meta">
+            <span class="pisa-bar-subject">🔬 Sains</span>
+            <span class="pisa-bar-hots">HOTS: 0.9%</span>
+          </div>
+          <div class="pisa-stack-row">
+            <div class="stack-seg lv1" style="width:65.8%;"></div>
+            <div class="stack-seg lv2" style="width:26.3%;"></div>
+            <div class="stack-seg lv3" style="width:7.0%;"></div>
+            <div class="stack-seg lv4" style="width:0.9%;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.35);margin-top:4px;">
+            <span>65.8%</span><span>26.3%</span><span>7.0%</span><span>0.9%</span>
+          </div>
+        </div>
+
+        <div class="pisa-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#3ECAB7;"></div>Level 1 (LOTS)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#A8E6DD;"></div>Level 2</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F5A623;"></div>Level 3</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#E05252;"></div>Level 4–6 (HOTS)</div>
+        </div>
+
+        <div style="margin-top:24px; padding:16px; background:rgba(62,202,183,0.08); border:1px solid rgba(62,202,183,0.2); border-radius:10px;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6;">
+            💡 <strong style="color:var(--teal-lt);">Solusi:</strong> Pembelajaran Mendalam mendorong guru untuk mendesain pengalaman belajar yang melatih keterampilan berpikir tingkat tinggi (HOTS) secara sistematis melalui pendekatan inkuiri, berbasis proyek, dan kontekstual.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — MODUL MATERI
+══════════════════════════════ -->
+<section class="section modules-section" id="materi">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Kurikulum Pelatihan</div>
+    <h2 class="section-heading reveal reveal-delay-1">Modul <span class="italic">Interaktif</span> Pelatihan</h2>
+    <p class="section-lead reveal reveal-delay-2">Enam sesi terstruktur yang memadukan teori Pembelajaran Mendalam dari Kemendikdasmen dengan praktik pedagogi STEM di kelas Biologi.</p>
+
+    <div class="modules-grid">
+      <div class="module-card reveal">
+        <div class="module-header teal">
+          <div class="module-num">Modul 01</div>
+          <div class="module-title">Pendahuluan &amp; Latar Belakang PM</div>
+          <div class="module-emoji">🌏</div>
+        </div>
+        <div class="module-body">
+          <p class="module-desc">Memahami konteks pendidikan Indonesia, tantangan PISA, dan urgensi Pembelajaran Mendalam dalam menyambut Bonus Demografi 2035.</p>
+          <ul class="module-topics">
+            <li>Permasalahan mutu pendidikan nasional</li>
+            <li>Data PISA 2022 — LOTS vs HOTS</li>
+            <li>Visi Indonesia 2045 &amp; Kompetensi Masa Depan</li>
+            <li>Pengenalan kerangka PM Kemendikdasmen</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal reveal-delay-1">
+        <div class="module-header navy">
+          <div class="module-num">Modul 02</div>
+          <div class="module-title">Kerangka Pembelajaran Mendalam</div>
+          <div class="module-emoji">🔭</div>
+        </div>
+        <div class="module-body">
+          <p class="module-desc">Memahami empat pilar kerangka PM: Praktik Pedagogis, Kemitraan, Lingkungan, dan Pemanfaatan Digital.</p>
+          <ul class="module-topics">
+            <li>Praktik Pedagogis — inkuiri, proyek, STEM</li>
+            <li>Kemitraan Pembelajaran — sekolah &amp; komunitas</li>
+            <li>Lingkungan fisik, virtual &amp; budaya belajar</li>
+            <li>Teknologi digital sebagai katalisator</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal reveal-delay-2">
+        <div class="module-header amber">
+          <div class="module-num">Modul 03</div>
+          <div class="module-title">8 Dimensi Profil Lulusan</div>
+          <div class="module-emoji">⭐</div>
+        </div>
+        <div class="module-body">
+          <p class="module-desc">Mendalami delapan dimensi profil lulusan yang menjadi target pencapaian Pembelajaran Mendalam di semua jenjang.</p>
+          <ul class="module-topics">
+            <li>Keimanan &amp; Ketakwaan, Kewargaan</li>
+            <li>Penalaran Kritis &amp; Kreativitas</li>
+            <li>Kolaborasi &amp; Kemandirian</li>
+            <li>Kesehatan &amp; Komunikasi</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal">
+        <div class="module-header" style="background:linear-gradient(135deg,#1A3D8A,#3B6ED4);">
+          <div class="module-num">Modul 04</div>
+          <div class="module-title">Pengalaman Belajar — Memahami, Mengaplikasi, Merefleksi</div>
+          <div class="module-emoji">🔄</div>
+        </div>
+        <div class="module-body">
+          <p class="module-desc">Merancang tiga tahap pengalaman belajar yang progresif dan bermakna, diperkuat dengan SOLO Taxonomy dan Bloom's.</p>
+          <ul class="module-topics">
+            <li>Memahami: Pengetahuan Esensial, Aplikatif, Nilai</li>
+            <li>Mengaplikasi: Pendalaman Pengetahuan kontekstual</li>
+            <li>Merefleksi: Regulasi Diri &amp; Metakognisi</li>
+            <li>SOLO Taxonomy &amp; Bloom's Taxonomy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal reveal-delay-1">
+        <div class="module-header" style="background:linear-gradient(135deg,#5C2D6A,#8B4DB0);">
+          <div class="module-num">Modul 05</div>
+          <div class="module-title">Implementasi PM di Mata Pelajaran Biologi</div>
+          <div class="module-emoji">🌿</div>
+        </div>
+        <div class="module-body">
+          <p class="module-desc">Praktik langsung merancang Rencana Pelaksanaan Pembelajaran Mendalam (RPM) untuk topik Biologi kontekstual.</p>
+          <ul class="module-topics">
+            <li>Contoh RPM Ekosistem &amp; Keanekaragaman Hayati</li>
+            <li>Adaptasi Model Inkuiri dalam PM</li>
+            <li>Asesmen autentik: as/for/of learning</li>
+            <li>Workshop menyusun unit plan STEM</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="module-card reveal reveal-delay-2">
+        <div class="module-header" style="background:linear-gradient(135deg,#1A5C3A,#2D9E6A);">
+          <div class="module-num">Modul 06</div>
+          <div class="module-title">Peran Guru &amp; Ekosistem PM</div>
+          <div class="module-emoji">👩‍🏫</div>
+        </div>
+        <div class="module-body">
+          <p class="module-desc">Memahami transformasi peran guru dari penyampai materi menjadi Aktivator, Kolaborator, dan Pengembang Budaya Belajar.</p>
+          <ul class="module-topics">
+            <li>Guru sebagai Aktivator — stimulasi HOTS</li>
+            <li>Guru sebagai Kolaborator — mitra komunitas</li>
+            <li>Pengembang Budaya Belajar — risk-taking</li>
+            <li>Elemen Ekosistem PM: sekolah &amp; masyarakat</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — 8 DIMENSI PROFIL LULUSAN
+══════════════════════════════ -->
+<section class="section dimensi-section" id="dimensi">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Profil Lulusan</div>
+    <h2 class="section-heading reveal reveal-delay-1">8 Dimensi yang <span class="italic">Dibentuk</span></h2>
+    <p class="section-lead reveal reveal-delay-2">Pembelajaran Mendalam bertujuan mewujudkan delapan dimensi profil lulusan yang menyeluruh, melampaui sekadar penguasaan akademis.</p>
+
+    <div class="dimensi-grid">
+      <div class="dimensi-card reveal">
+        <div class="dimensi-num">DIMENSI 01</div>
+        <div class="dimensi-icon">🕌</div>
+        <div class="dimensi-title">Keimanan &amp; Ketakwaan</div>
+        <div class="dimensi-desc">Keyakinan teguh kepada Tuhan YME dan pengamalan nilai spiritual dalam kehidupan sehari-hari.</div>
+      </div>
+      <div class="dimensi-card reveal reveal-delay-1">
+        <div class="dimensi-num">DIMENSI 02</div>
+        <div class="dimensi-icon">🇮🇩</div>
+        <div class="dimensi-title">Kewargaan</div>
+        <div class="dimensi-desc">Cinta tanah air, menghargai keberagaman budaya, dan berkomitmen pada harmoni antarbangsa global.</div>
+      </div>
+      <div class="dimensi-card reveal reveal-delay-2">
+        <div class="dimensi-num">DIMENSI 03</div>
+        <div class="dimensi-icon">🧩</div>
+        <div class="dimensi-title">Penalaran Kritis</div>
+        <div class="dimensi-desc">Berpikir logis, analitis, dan reflektif dalam memahami, mengevaluasi, dan memproses informasi.</div>
+      </div>
+      <div class="dimensi-card reveal reveal-delay-3">
+        <div class="dimensi-num">DIMENSI 04</div>
+        <div class="dimensi-icon">💡</div>
+        <div class="dimensi-title">Kreativitas</div>
+        <div class="dimensi-desc">Berpikir inovatif, fleksibel, dan orisinal untuk menciptakan solusi yang unik dan bermanfaat.</div>
+      </div>
+      <div class="dimensi-card reveal">
+        <div class="dimensi-num">DIMENSI 05</div>
+        <div class="dimensi-icon">🤝</div>
+        <div class="dimensi-title">Kolaborasi</div>
+        <div class="dimensi-desc">Bekerja sama secara efektif dengan semangat gotong royong melalui pembagian peran dan tanggung jawab.</div>
+      </div>
+      <div class="dimensi-card reveal reveal-delay-1">
+        <div class="dimensi-num">DIMENSI 06</div>
+        <div class="dimensi-icon">🦅</div>
+        <div class="dimensi-title">Kemandirian</div>
+        <div class="dimensi-desc">Bertanggung jawab atas proses belajar sendiri, mengambil inisiatif dan mengatasi hambatan secara mandiri.</div>
+      </div>
+      <div class="dimensi-card reveal reveal-delay-2">
+        <div class="dimensi-num">DIMENSI 07</div>
+        <div class="dimensi-icon">💪</div>
+        <div class="dimensi-title">Kesehatan</div>
+        <div class="dimensi-desc">Fisik prima, bugar, sehat, dan mampu menjaga keseimbangan kesehatan mental-fisik untuk well-being.</div>
+      </div>
+      <div class="dimensi-card reveal reveal-delay-3">
+        <div class="dimensi-num">DIMENSI 08</div>
+        <div class="dimensi-icon">💬</div>
+        <div class="dimensi-title">Komunikasi</div>
+        <div class="dimensi-desc">Kemampuan komunikasi intrapribadi dan antarpribadi, menyampaikan ide secara lisan maupun tulisan secara efektif.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — AKTIVITAS H5P
+══════════════════════════════ -->
+<section class="section activity-section" id="aktivitas">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Aktivitas Interaktif</div>
+    <h2 class="section-heading reveal reveal-delay-1">Belajar dengan <span style="color:var(--amber-lt);font-style:italic;font-weight:300;">Praktek</span> Langsung</h2>
+    <p class="section-lead reveal reveal-delay-2">Platform ini menyediakan aktivitas H5P interaktif yang dirancang khusus untuk guru, mendukung implementasi PM di konteks Biologi dan STEM.</p>
+
+    <div class="activity-grid">
+      <div class="activity-card reveal">
+        <div class="activity-badge">H5P · Course Presentation</div>
+        <div class="activity-title">Presentasi Konsep PM Interaktif</div>
+        <div class="activity-desc">Jelajahi materi Pembelajaran Mendalam melalui slide interaktif dengan kuis tertanam, hotspot, dan feedback langsung.</div>
+        <ul class="activity-features">
+          <li>Navigasi non-linear antar slide</li>
+          <li>Kuis pemahaman di setiap modul</li>
+          <li>Progress tracking otomatis</li>
+          <li>Kompatibel penuh di mobile</li>
+        </ul>
+      </div>
+
+      <div class="activity-card reveal reveal-delay-1">
+        <div class="activity-badge">H5P · Documentation Tool</div>
+        <div class="activity-title">Unit Plan Builder STEM</div>
+        <div class="activity-desc">Susun Rencana Pelaksanaan Pembelajaran (RPP/RPM) berbasis PM langkah demi langkah, dengan panduan terstruktur dari Ayuk.</div>
+        <ul class="activity-features">
+          <li>Template RPM siap pakai</li>
+          <li>Guided wizard 4 langkah</li>
+          <li>Export ke PDF / Google Drive</li>
+          <li>Tersimpan otomatis di browser</li>
+        </ul>
+      </div>
+
+      <div class="activity-card reveal reveal-delay-2">
+        <div class="activity-badge">H5P · Branching Scenario</div>
+        <div class="activity-title">Simulasi Kelas: Inkuiri Biologi</div>
+        <div class="activity-desc">Hadapi skenario kelas nyata — pilih strategi mengajar terbaik dalam simulasi inkuiri ekosistem sungai bersama peserta didik virtual.</div>
+        <ul class="activity-features">
+          <li>6 skenario keputusan pedagogi</li>
+          <li>Umpan balik reflektif per pilihan</li>
+          <li>Konteks ekosistem khas Indonesia</li>
+          <li>Dapat diulang dengan hasil berbeda</li>
+        </ul>
+      </div>
+
+      <div class="activity-card reveal">
+        <div class="activity-badge">YouTube · Video Pembelajaran</div>
+        <div class="activity-title">Video Praktik PM di Kelas</div>
+        <div class="activity-desc">Tonton rekaman sesi nyata penerapan Pembelajaran Mendalam dalam pelajaran Biologi — lengkap dengan anotasi dan refleksi pembicara.</div>
+        <ul class="activity-features">
+          <li>Rekaman kelas sesungguhnya</li>
+          <li>Anotasi waktu dengan penjelasan</li>
+          <li>Diskusi di kolom komentar</li>
+          <li>Subtitle Bahasa Indonesia</li>
+        </ul>
+      </div>
+
+      <div class="activity-card reveal reveal-delay-1">
+        <div class="activity-badge">H5P · Interactive Video</div>
+        <div class="activity-title">Video Interaktif: SOLO Taxonomy</div>
+        <div class="activity-desc">Pahami SOLO Taxonomy dan kaitannya dengan pengalaman belajar PM melalui video yang bisa di-pause dan dijawab langsung.</div>
+        <ul class="activity-features">
+          <li>Pertanyaan muncul saat video berjalan</li>
+          <li>Contoh dari mata pelajaran Biologi</li>
+          <li>Peta konsep dinamis interaktif</li>
+          <li>Rekap nilai di akhir video</li>
+        </ul>
+      </div>
+
+      <div class="activity-card reveal reveal-delay-2">
+        <div class="activity-badge">Google Drive · Resource Hub</div>
+        <div class="activity-title">Repositori Materi &amp; Template</div>
+        <div class="activity-desc">Akses semua materi pelatihan, template RPM, rubrik asesmen PM, dan panduan implementasi yang dapat langsung diunduh dan digunakan.</div>
+        <ul class="activity-features">
+          <li>Template RPM editable (.docx)</li>
+          <li>Rubrik asesmen autentik PM</li>
+          <li>Bahan presentasi pembicara (PDF)</li>
+          <li>Contoh LKS berbasis inkuiri</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — ALUR BELAJAR
+══════════════════════════════ -->
+<section class="section flow-section" id="alur">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Alur Pengalaman Belajar</div>
+    <h2 class="section-heading reveal reveal-delay-1">Tiga <span class="italic">Tahap</span> Pengalaman</h2>
+    <p class="section-lead reveal reveal-delay-2">Setiap sesi dirancang mengikuti tiga tahap pengalaman belajar PM yang progresif — dari membangun pemahaman hingga internalisasi melalui refleksi diri.</p>
+
+    <div class="flow-steps-horiz">
+      <div class="flow-step-v reveal">
+        <div class="flow-step-num memahami">
+          <div class="flow-step-num-inner">1</div>
+        </div>
+        <div class="flow-step-kicker">Pengalaman Belajar I</div>
+        <div class="flow-step-title">Memahami</div>
+        <div class="flow-step-desc">Peserta aktif mengkonstruksi pengetahuan dari berbagai sumber: teks, video, diskusi, dan eksplorasi lapangan. Mencakup pengetahuan esensial, aplikatif, dan nilai-karakter.</div>
+        <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="topic-tag" style="font-size:11px;background:rgba(14,124,110,0.08);border-color:var(--border2);color:var(--teal);">📚 Pengetahuan Esensial</span>
+          <span class="topic-tag" style="font-size:11px;background:rgba(14,124,110,0.08);border-color:var(--border2);color:var(--teal);">⚙️ Pengetahuan Aplikatif</span>
+          <span class="topic-tag" style="font-size:11px;background:rgba(14,124,110,0.08);border-color:var(--border2);color:var(--teal);">🌟 Nilai &amp; Karakter</span>
+        </div>
+      </div>
+
+      <div class="flow-step-v reveal reveal-delay-1">
+        <div class="flow-step-num mengaplikasi">
+          <div class="flow-step-num-inner">2</div>
+        </div>
+        <div class="flow-step-kicker">Pengalaman Belajar II</div>
+        <div class="flow-step-title">Mengaplikasi</div>
+        <div class="flow-step-desc">Peserta menerapkan pengetahuan dalam konteks nyata — kunjungan lapangan, proyek, wawancara komunitas, dan simulasi kelas. Pendalaman pengetahuan lintas disiplin.</div>
+        <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="topic-tag" style="font-size:11px;background:rgba(245,157,42,0.08);border-color:#F5C59F;color:#C47A0E;">🔭 Pendalaman Pengetahuan</span>
+          <span class="topic-tag" style="font-size:11px;background:rgba(245,157,42,0.08);border-color:#F5C59F;color:#C47A0E;">🌍 Kontekstual</span>
+        </div>
+      </div>
+
+      <div class="flow-step-v reveal reveal-delay-2">
+        <div class="flow-step-num merefleksi">
+          <div class="flow-step-num-inner">3</div>
+        </div>
+        <div class="flow-step-kicker">Pengalaman Belajar III</div>
+        <div class="flow-step-title">Merefleksi</div>
+        <div class="flow-step-desc">Peserta mengevaluasi proses belajar, mengembangkan regulasi diri, metakognisi, dan merencanakan tindak lanjut. Jurnal reflektif dan penilaian diri.</div>
+        <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="topic-tag" style="font-size:11px;background:rgba(59,110,212,0.08);border-color:#A0B8EF;color:#1A3D8A;">🪞 Regulasi Diri</span>
+          <span class="topic-tag" style="font-size:11px;background:rgba(59,110,212,0.08);border-color:#A0B8EF;color:#1A3D8A;">🧠 Metakognisi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — TANYA JAWAB
+══════════════════════════════ -->
+<section class="section qa-section" id="tanya">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Tanya Jawab</div>
+    <h2 class="section-heading reveal reveal-delay-1">Kirimkan <span class="italic">Pertanyaan</span> Anda</h2>
+
+    <div class="qa-layout">
+      <div class="qa-form-wrap reveal">
+        <div class="qa-form-title">Ajukan Pertanyaan ke Pembicara</div>
+        <div class="qa-form-sub">Pertanyaan akan dijawab secara langsung oleh Ibu Ayuk Ratna Puspaningsih dalam sesi Q&amp;A atau melalui platform ini.</div>
+
+        <input class="qa-input" type="text" placeholder="Nama lengkap Anda" id="qaName" data-i18n-placeholder="qa_name_placeholder"/>
+        <input class="qa-input" type="text" placeholder="Asal sekolah" id="qaSchool"/>
+        <select class="qa-input" id="qaSubject" style="cursor:pointer;appearance:none;">
+          <option value="">-- Pilih topik pertanyaan --</option>
+          <option>Implementasi PM di kelas</option>
+          <option>Penilaian / Asesmen Autentik</option>
+          <option>Strategi Inkuiri STEM</option>
+          <option>Profil Lulusan 8 Dimensi</option>
+          <option>Pemanfaatan Teknologi Digital</option>
+          <option>Lainnya</option>
+        </select>
+        <textarea class="qa-textarea" placeholder="Tuliskan pertanyaan Anda di sini..." id="qaMessage"></textarea>
+        <button class="qa-submit" onclick="submitQA()">Kirim Pertanyaan →</button>
+        <div id="qaSuccess" style="display:none;margin-top:12px;padding:12px;background:#E8F5EE;border-radius:8px;color:#1A3D2B;font-size:13px;">✅ Pertanyaan Anda berhasil dikirim! Terima kasih.</div>
+      </div>
+
+      <div class="reveal reveal-delay-1">
+        <div class="qa-sidebar-title">Tips Pertanyaan Efektif</div>
+
+        <div class="qa-tip">
+          <div class="qa-tip-title">🎯 Spesifik &amp; Kontekstual</div>
+          <div class="qa-tip-text">Sertakan konteks kelas, mata pelajaran, atau tantangan nyata yang Anda hadapi dalam mengimplementasikan PM.</div>
+        </div>
+
+        <div class="qa-tip">
+          <div class="qa-tip-title">🔗 Kaitkan dengan Pengalaman</div>
+          <div class="qa-tip-text">Ceritakan pengalaman mengajar yang relevan agar pembicara dapat memberikan jawaban yang lebih terarah dan praktis.</div>
+        </div>
+
+        <div class="qa-tip">
+          <div class="qa-tip-title">💡 Satu Pertanyaan Per Formulir</div>
+          <div class="qa-tip-text">Fokus pada satu isu utama per pengiriman agar semua pertanyaan dapat ditangani secara mendalam dalam waktu sesi.</div>
+        </div>
+
+        <div style="margin-top:20px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:12px;">
+          <div style="font-size:12px;font-family:var(--mono);color:var(--ink4);margin-bottom:8px;letter-spacing:0.08em;text-transform:uppercase;">Pembicara</div>
+          <div style="font-size:14px;font-weight:700;color:var(--navy);">Ayuk Ratna Puspaningsih</div>
+          <div style="font-size:12px;color:var(--teal);margin-bottom:4px;">Guru Biologi · SMA Negeri Bali Mandara</div>
+          <div style="font-size:12px;color:var(--ink3);">Fasilitator Pembelajaran Mendalam STEM untuk SMA/MA se-Bali</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — UNIT PLAN BUILDER
+══════════════════════════════ -->
+<section class="section builder-section" id="unitplan">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Alat Perancangan</div>
+    <h2 class="section-heading reveal reveal-delay-1">Unit Plan Builder <span class="italic">STEM</span></h2>
+    <p class="section-lead reveal reveal-delay-2">Rancang Rencana Pelaksanaan Pembelajaran Mendalam (RPM) langkah demi langkah — dipandu oleh kerangka PM Kemendikdasmen, sesuai mata pelajaran Biologi.</p>
+
+    <div class="builder-layout">
+      <!-- Left: step guide -->
+      <div class="reveal">
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:12px;">Langkah Perancangan</div>
+        <div class="builder-steps" id="builderStepNav">
+          <div class="builder-step active" onclick="goToUPFStep(1)">
+            <div class="bs-dot">1</div>
+            <div>
+              <div class="bs-title">Identifikasi</div>
+              <div class="bs-desc">Profil peserta didik, materi, dan Dimensi Profil Lulusan yang dituju</div>
+            </div>
+          </div>
+          <div class="builder-step" onclick="goToUPFStep(2)">
+            <div class="bs-dot">2</div>
+            <div>
+              <div class="bs-title">Desain Pembelajaran</div>
+              <div class="bs-desc">Tujuan, topik, praktik pedagogis, lingkungan, dan kemitraan</div>
+            </div>
+          </div>
+          <div class="builder-step" onclick="goToUPFStep(3)">
+            <div class="bs-dot">3</div>
+            <div>
+              <div class="bs-title">Pengalaman Belajar</div>
+              <div class="bs-desc">Aktivitas Memahami, Mengaplikasi, Merefleksi dengan prinsip PM</div>
+            </div>
+          </div>
+          <div class="builder-step" onclick="goToUPFStep(4)">
+            <div class="bs-dot">4</div>
+            <div>
+              <div class="bs-title">Asesmen</div>
+              <div class="bs-desc">Assessment as, for, dan of Learning — teknik dan instrumen</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:28px;padding:16px;background:rgba(14,124,110,0.07);border:1px solid var(--border2);border-radius:12px;">
+          <div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:6px;">💡 Catatan Penggunaan</div>
+          <div style="font-size:12.5px;color:var(--ink3);line-height:1.6;">Unit plan yang Anda susun dapat diekspor ke PDF atau disalin ke Google Docs. Semua field bersifat opsional kecuali Tujuan Pembelajaran dan Dimensi Profil Lulusan.</div>
+        </div>
+      </div>
+
+      <!-- Right: wizard form -->
+      <div class="unit-plan-form reveal reveal-delay-1">
+        <div class="upf-header">
+          <div class="upf-header-title">📋 Rencana Pelaksanaan Pembelajaran Mendalam</div>
+          <div class="upf-progress">
+            <div class="upf-prog-dot active" id="upf-pd-1"></div>
+            <div class="upf-prog-dot" id="upf-pd-2"></div>
+            <div class="upf-prog-dot" id="upf-pd-3"></div>
+            <div class="upf-prog-dot" id="upf-pd-4"></div>
+          </div>
+        </div>
+
+        <div class="upf-body">
+
+          <!-- Step 1: Identifikasi -->
+          <div class="upf-step active" id="upf-step-1">
+            <div class="upf-step-title">Langkah 1 — Identifikasi</div>
+            <div class="upf-field">
+              <label class="upf-label" data-i18n="upf_mapel">Mata Pelajaran</label>
+              <select class="upf-select" id="upf-mapel">
+                <option>Biologi</option>
+                <option>IPA Terpadu</option>
+                <option>Fisika</option>
+                <option>Kimia</option>
+                <option>Matematika</option>
+                <option>Lainnya</option>
+              </select>
+            </div>
+            <div class="upf-row">
+              <div class="upf-field">
+                <label class="upf-label">Kelas / Fase</label>
+                <select class="upf-select" id="upf-kelas">
+                  <option>X — Fase E</option>
+                  <option>XI — Fase F</option>
+                  <option>XII — Fase F</option>
+                </select>
+              </div>
+              <div class="upf-field">
+                <label class="upf-label">Alokasi Waktu</label>
+                <input class="upf-input" type="text" placeholder="Misal: 2 × 45 menit" id="upf-waktu"/>
+              </div>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Profil Peserta Didik (opsional)</label>
+              <textarea class="upf-textarea" placeholder="Deskripsikan pengetahuan awal, minat, dan kebutuhan belajar peserta didik..." id="upf-profil"></textarea>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Dimensi Profil Lulusan yang Dituju</label>
+              <div class="dimensi-checks" id="dimensiChecks">
+                <label class="dimensi-check-item"><input type="checkbox" value="iman"/> 🕌 Keimanan &amp; Ketakwaan</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="warga"/> 🇮🇩 Kewargaan</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="kritis"/> 🧩 Penalaran Kritis</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="kreatif"/> 💡 Kreativitas</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="kolaborasi"/> 🤝 Kolaborasi</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="mandiri"/> 🦅 Kemandirian</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="sehat"/> 💪 Kesehatan</label>
+                <label class="dimensi-check-item"><input type="checkbox" value="komun"/> 💬 Komunikasi</label>
+              </div>
+            </div>
+            <div class="upf-nav">
+              <span class="upf-step-count">Langkah 1 dari 4</span>
+              <button class="upf-btn-next" onclick="upfNext()">Selanjutnya →</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Desain Pembelajaran -->
+          <div class="upf-step" id="upf-step-2">
+            <div class="upf-step-title">Langkah 2 — Desain Pembelajaran</div>
+            <div class="upf-field">
+              <label class="upf-label">Tujuan Pembelajaran *</label>
+              <textarea class="upf-textarea" placeholder="Peserta didik mampu: (1) ... (2) ... (3) ..." id="upf-tujuan"></textarea>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Topik Pembelajaran (opsional)</label>
+              <input class="upf-input" type="text" placeholder="Misal: Peran Manusia dalam Menjaga Ekosistem" id="upf-topik"/>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Praktik Pedagogis</label>
+              <select class="upf-select" id="upf-pedagogi">
+                <option>Pembelajaran Berbasis Inkuiri</option>
+                <option>Pembelajaran Berbasis Proyek (PjBL)</option>
+                <option>Pembelajaran Berbasis Masalah (PBL)</option>
+                <option>Pembelajaran Kolaboratif</option>
+                <option>Pembelajaran STEM Terpadu</option>
+                <option>Pembelajaran Berdiferensiasi</option>
+                <option>Pembelajaran Kontekstual</option>
+              </select>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Lingkungan Pembelajaran</label>
+              <input class="upf-input" type="text" placeholder="Misal: Lab Biologi, kebun sekolah, platform daring Zoom" id="upf-lingkungan"/>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Kemitraan (opsional)</label>
+              <input class="upf-input" type="text" placeholder="Misal: Komunitas Peduli Lingkungan, orang tua, DUDI" id="upf-mitra"/>
+            </div>
+            <div class="upf-nav">
+              <button class="upf-btn-back" onclick="upfBack()">← Kembali</button>
+              <span class="upf-step-count">Langkah 2 dari 4</span>
+              <button class="upf-btn-next" onclick="upfNext()">Selanjutnya →</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Pengalaman Belajar -->
+          <div class="upf-step" id="upf-step-3">
+            <div class="upf-step-title">Langkah 3 — Pengalaman Belajar</div>
+            <div class="upf-field">
+              <label class="upf-label" style="color:var(--teal);">🔵 Memahami <span style="font-weight:400;color:var(--ink4);">(berkesadaran, bermakna)</span></label>
+              <textarea class="upf-textarea" placeholder="Deskripsikan aktivitas memahami: diskusi, eksplorasi sumber, peta konsep..." id="upf-memahami"></textarea>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label" style="color:#C47A0E;">🟡 Mengaplikasi <span style="font-weight:400;color:var(--ink4);">(bermakna, menggembirakan)</span></label>
+              <textarea class="upf-textarea" placeholder="Deskripsikan aktivitas mengaplikasi: kunjungan lapangan, proyek, wawancara..." id="upf-mengaplikasi"></textarea>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label" style="color:#1A3D8A;">🟣 Merefleksi <span style="font-weight:400;color:var(--ink4);">(berkesadaran, regulasi diri)</span></label>
+              <textarea class="upf-textarea" placeholder="Deskripsikan aktivitas merefleksi: jurnal, evaluasi diri, umpan balik sejawat..." id="upf-merefleksi"></textarea>
+            </div>
+            <div class="upf-nav">
+              <button class="upf-btn-back" onclick="upfBack()">← Kembali</button>
+              <span class="upf-step-count">Langkah 3 dari 4</span>
+              <button class="upf-btn-next" onclick="upfNext()">Selanjutnya →</button>
+            </div>
+          </div>
+
+          <!-- Step 4: Asesmen -->
+          <div class="upf-step" id="upf-step-4">
+            <div class="upf-step-title">Langkah 4 — Asesmen Pembelajaran</div>
+            <div class="upf-field">
+              <label class="upf-label">Asesmen Awal (Diagnostik)</label>
+              <input class="upf-input" type="text" placeholder="Misal: kuis singkat, pertanyaan pemantik, diskusi awal" id="upf-as-awal"/>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Asesmen Proses (Formatif)</label>
+              <input class="upf-input" type="text" placeholder="Misal: peta konsep, observasi, penilaian sejawat" id="upf-as-proses"/>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Asesmen Akhir (Sumatif)</label>
+              <input class="upf-input" type="text" placeholder="Misal: jurnal reflektif, penilaian proyek, portofolio, tes tertulis" id="upf-as-akhir"/>
+            </div>
+            <div class="upf-field">
+              <label class="upf-label">Catatan Tambahan (opsional)</label>
+              <textarea class="upf-textarea" style="min-height:60px;" placeholder="Diferensiasi, kebutuhan khusus, sumber belajar tambahan..." id="upf-catatan"></textarea>
+            </div>
+            <div class="upf-nav">
+              <button class="upf-btn-back" onclick="upfBack()">← Kembali</button>
+              <span class="upf-step-count">Langkah 4 dari 4</span>
+              <button class="upf-btn-next upf-btn-submit" onclick="upfSubmit()">Simpan &amp; Unduh PDF 📄</button>
+            </div>
+          </div>
+
+        </div><!-- /upf-body -->
+      </div><!-- /unit-plan-form -->
+    </div><!-- /builder-layout -->
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — MEDIA HUB
+══════════════════════════════ -->
+<section class="section media-section" id="media">
+  <div class="section-inner">
+    <div class="section-kicker reveal">Media &amp; Sumber Belajar</div>
+    <h2 class="section-heading reveal reveal-delay-1">Video &amp; <span class="italic">Dokumen</span> Pendukung</h2>
+    <p class="section-lead reveal reveal-delay-2">Seluruh materi pelatihan, rekaman sesi, dan template siap unduh tersedia di satu tempat — dapat diakses kapan saja dan di mana saja.</p>
+
+    <div class="reveal">
+      <div class="media-tabs" role="tablist">
+        <button class="media-tab active" onclick="switchTab('video', this)" role="tab">🎬 Video Sesi</button>
+        <button class="media-tab" onclick="switchTab('drive', this)" role="tab">📁 Dokumen &amp; Template</button>
+      </div>
+
+      <!-- Video Panel -->
+      <div class="media-panel active" id="tab-video">
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#0E7C6E,#0D2137);"></div>
+              <div class="video-play-btn">▶</div>
+              <span class="video-thumb-label">Modul 01 · 28 Menit</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Pendahuluan: Mengapa Pembelajaran Mendalam?</div>
+              <div class="video-meta">Ayuk Ratna Puspaningsih · 2026</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#1A3D8A,#3B6ED4);"></div>
+              <div class="video-play-btn">▶</div>
+              <span class="video-thumb-label">Modul 02 · 35 Menit</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Kerangka PM: Empat Pilar Utama</div>
+              <div class="video-meta">Ayuk Ratna Puspaningsih · 2026</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#5C2D6A,#8B4DB0);"></div>
+              <div class="video-play-btn">▶</div>
+              <span class="video-thumb-label">Modul 04 · 42 Menit</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Memahami, Mengaplikasi, Merefleksi: Demo Kelas</div>
+              <div class="video-meta">Ayuk Ratna Puspaningsih · 2026</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#1A5C3A,#3ECAB7);"></div>
+              <div class="video-play-btn">▶</div>
+              <span class="video-thumb-label">Modul 05 · 50 Menit</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Inkuiri Ekosistem: Praktik PM di Kelas Biologi</div>
+              <div class="video-meta">Ayuk Ratna Puspaningsih · 2026</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#C47A0E,#F59D2A);"></div>
+              <div class="video-play-btn">▶</div>
+              <span class="video-thumb-label">Workshop · 60 Menit</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Workshop: Merancang RPM Bersama</div>
+              <div class="video-meta">Sesi Workshop Kelompok · 2026</div>
+            </div>
+          </div>
+
+          <div class="video-card">
+            <div class="video-thumb">
+              <div class="video-thumb-bg" style="background:linear-gradient(135deg,#2D3A4A,#4A6070);"></div>
+              <div class="video-play-btn">▶</div>
+              <span class="video-thumb-label">Refleksi · 20 Menit</span>
+            </div>
+            <div class="video-info">
+              <div class="video-title">Sesi Penutup: Refleksi &amp; Tindak Lanjut</div>
+              <div class="video-meta">Sesi Pleno · 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drive Panel -->
+      <div class="media-panel" id="tab-drive">
+        <div class="drive-grid">
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon pdf">📄</div>
+            <div>
+              <div class="drive-name">Panduan Pembelajaran Mendalam — Kemendikdasmen RI</div>
+              <div class="drive-size">PDF · 4.2 MB · 62 halaman</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon doc">📝</div>
+            <div>
+              <div class="drive-name">Template RPM Biologi — Ekosistem (editable)</div>
+              <div class="drive-size">DOCX · 156 KB</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon sheet">📊</div>
+            <div>
+              <div class="drive-name">Rubrik Asesmen Autentik PM — 3 Fungsi</div>
+              <div class="drive-size">XLSX · 89 KB</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon ppt">🎨</div>
+            <div>
+              <div class="drive-name">Presentasi Pembicara — Semua Modul</div>
+              <div class="drive-size">PDF · 18.6 MB</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon doc">📝</div>
+            <div>
+              <div class="drive-name">LKS Inkuiri: Keanekaragaman Hayati Bali</div>
+              <div class="drive-size">PDF · 2.1 MB</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon sheet">📊</div>
+            <div>
+              <div class="drive-name">Instrumen Penilaian Diri (Self-Assessment)</div>
+              <div class="drive-size">PDF · 340 KB</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon doc">📝</div>
+            <div>
+              <div class="drive-name">Contoh Jurnal Refleksi Peserta Didik</div>
+              <div class="drive-size">DOCX · 78 KB</div>
+            </div>
+          </a>
+          <a class="drive-item" href="#" onclick="return false;">
+            <div class="drive-icon pdf">📄</div>
+            <div>
+              <div class="drive-name">SOLO Taxonomy — Panduan Praktis untuk Guru</div>
+              <div class="drive-size">PDF · 1.8 MB</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     SECTION — UMPAN BALIK (CTA)
+══════════════════════════════ -->
+<section class="cta-section" id="feedback">
+  <div class="cta-inner">
+    <div class="cta-eyebrow reveal">Umpan Balik Pelatihan</div>
+    <h2 class="cta-heading reveal reveal-delay-1">Bantu Kami <em>Meningkatkan</em><br/>Kualitas Pelatihan</h2>
+    <p class="cta-sub reveal reveal-delay-2">Umpan balik Anda sangat berarti untuk pengembangan program Pembelajaran Mendalam bagi guru-guru Indonesia.</p>
+
+    <div class="feedback-form reveal reveal-delay-2">
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">NAMA LENGKAP</label>
+          <input class="form-input" type="text" placeholder="Nama Anda" id="fbName"/>
+        </div>
+        <div class="form-field">
+          <label class="form-label">ASAL SEKOLAH / KABUPATEN</label>
+          <input class="form-input" type="text" placeholder="Misal: SMA N 1 Kuta, Badung" id="fbSchool"/>
+        </div>
+      </div>
+      <div class="form-field" style="margin-bottom:14px;">
+        <label class="form-label">SESI PELATIHAN</label>
+        <select class="form-select" id="fbSession">
+          <option>Pilih sesi yang diikuti...</option>
+          <option>Modul 01 — Pendahuluan PM</option>
+          <option>Modul 02 — Kerangka PM</option>
+          <option>Modul 03 — 8 Dimensi Profil Lulusan</option>
+          <option>Modul 04 — Pengalaman Belajar</option>
+          <option>Modul 05 — Implementasi di Biologi</option>
+          <option>Modul 06 — Peran Guru &amp; Ekosistem</option>
+          <option>Semua Sesi</option>
+        </select>
+      </div>
+      <div class="form-field" style="margin-bottom:14px;">
+        <label class="form-label">PENILAIAN SESI (1–5 ⭐)</label>
+        <div class="form-rating" id="starRating">
+          <div class="rating-star" data-val="1" onclick="setRating(1)">⭐</div>
+          <div class="rating-star" data-val="2" onclick="setRating(2)">⭐</div>
+          <div class="rating-star" data-val="3" onclick="setRating(3)">⭐</div>
+          <div class="rating-star" data-val="4" onclick="setRating(4)">⭐</div>
+          <div class="rating-star" data-val="5" onclick="setRating(5)">⭐</div>
+        </div>
+      </div>
+      <textarea class="form-textarea" placeholder="Ceritakan pengalaman belajar Anda, hal yang paling berkesan, atau saran untuk sesi berikutnya..." id="fbMessage"></textarea>
+      <button class="form-submit" onclick="submitFeedback()">Kirim Umpan Balik 🚀</button>
+      <div class="form-success" id="fbSuccess">🎉 Terima kasih! Umpan balik Anda telah berhasil dikirim.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">Sekolah<em>Mania</em>.com</div>
+        <p class="footer-brand-desc">Platform pelatihan guru STEM interaktif untuk mendukung implementasi Pembelajaran Mendalam di sekolah menengah Indonesia. Didedikasikan untuk kemajuan pendidikan Nusantara.</p>
+        <div class="footer-badges">
+          <span class="footer-badge">Next.js 16</span>
+          <span class="footer-badge">Supabase</span>
+          <span class="footer-badge">H5P</span>
+          <span class="footer-badge">Vercel</span>
+          <span class="footer-badge">Kemendikdasmen RI</span>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Navigasi</div>
+        <ul>
+          <li><a href="#tentang">Tentang PM</a></li>
+          <li><a href="#mengapa">Data PISA</a></li>
+          <li><a href="#materi">Modul Materi</a></li>
+          <li><a href="#dimensi">8 Dimensi</a></li>
+          <li><a href="#aktivitas">Aktivitas</a></li>
+          <li><a href="#alur">Alur Belajar</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <div class="footer-col-title">Kontak</div>
+        <ul>
+          <li><a href="#tanya">Kirim Pertanyaan</a></li>
+          <li><a href="#feedback">Umpan Balik</a></li>
+          <li><a href="mailto:kurikulum@kemdikbud.go.id">kurikulum@kemdikbud.go.id</a></li>
+        </ul>
+        <div style="margin-top:20px;">
+          <div class="footer-col-title">Referensi</div>
+          <ul>
+            <li><a href="#">Panduan PM Kemendikdasmen</a></li>
+            <li><a href="#">SOLO Taxonomy — John Biggs</a></li>
+            <li><a href="#">NPDL deep-learning.global</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-copy">
+        © 2026 SekolahMania.com · Pembicara: Ayuk Ratna Puspaningsih, SMA Negeri Bali Mandara
+      </div>
+      <div class="footer-stack">
+        <span>sekolahmania.com</span>
+        <div class="footer-stack-dot"></div>
+        <span>Bali, Indonesia</span>
+        <div class="footer-stack-dot"></div>
+        <span>Built with ♥ untuk guru Indonesia</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════
+     JAVASCRIPT (Aloha-style jQuery)
+══════════════════════════════ -->
+<script>
+// ═══════════════════════════════════════════════
+//  SekolahMania — scripts.js (Aloha-style jQuery)
+//  Cache-bust: ?2
+// ═══════════════════════════════════════════════
+
+// ── State ──────────────────────────────────────
+var currentRating  = 0;
+var upfCurrentStep = 1;
+var upfTotalSteps  = 4;
+
+// ── Supabase config (replace with real values) ─
+var SUPABASE_URL     = 'https://your-project.supabase.co';
+var SUPABASE_ANON    = 'your-anon-key';
+
+// ── Nav: open / close (Aloha global onclick pattern) ──
+function openNav() {
+  $('#sidenav').addClass('open');
+  $('#sidenavOverlay').addClass('visible');
+  $('#hamburger').addClass('open');
+  $('body').css('overflow', 'hidden');
+}
+function closeNav() {
+  $('#sidenav').removeClass('open');
+  $('#sidenavOverlay').removeClass('visible');
+  $('#hamburger').removeClass('open');
+  $('body').css('overflow', '');
+}
+
+// ── Jump to section utility ──────────────────
+function jumpToSection(id) {
+  var $el = $('#' + id);
+  if (!$el.length) return;
+  $('html,body').animate({ scrollTop: $el.offset().top - 80 }, 400);
+}
+
+// ── Star rating ───────────────────────────────
+function setRating(val) {
+  currentRating = val;
+  $('#starRating .rating-star').each(function() {
+    $(this).toggleClass('active', parseInt($(this).data('val')) <= val);
+  });
+}
+
+// ── Media tab switcher (Aloha tab pattern) ───
+function switchTab(panel, btn) {
+  $('.media-tab').removeClass('active');
+  $(btn).addClass('active');
+  $('.media-panel').removeClass('active');
+  $('#tab-' + panel).addClass('active');
+}
+
+// ── Unit Plan Builder — step navigation ──────
+function upfGoTo(step) {
+  upfCurrentStep = step;
+
+  // Hide all steps, show current
+  $('.upf-step').removeClass('active');
+  $('#upf-step-' + step).addClass('active');
+
+  // Progress dots
+  for (var i = 1; i <= upfTotalSteps; i++) {
+    var $dot = $('#upf-pd-' + i);
+    $dot.removeClass('done active');
+    if (i < step)  $dot.addClass('done');
+    if (i === step) $dot.addClass('active');
+  }
+
+  // Left nav steps
+  $('.builder-step').removeClass('active');
+  $('#builderStepNav .builder-step').eq(step - 1).addClass('active');
+}
+
+function upfNext() {
+  if (upfCurrentStep < upfTotalSteps) upfGoTo(upfCurrentStep + 1);
+}
+function upfBack() {
+  if (upfCurrentStep > 1) upfGoTo(upfCurrentStep - 1);
+}
+function goToUPFStep(n) { upfGoTo(n); }
+
+function upfSubmit() {
+  var data = {
+    mapel:         $('#upf-mapel').val(),
+    kelas:         $('#upf-kelas').val(),
+    waktu:         $('#upf-waktu').val(),
+    profil:        $('#upf-profil').val(),
+    tujuan:        $('#upf-tujuan').val(),
+    topik:         $('#upf-topik').val(),
+    pedagogi:      $('#upf-pedagogi').val(),
+    lingkungan:    $('#upf-lingkungan').val(),
+    mitra:         $('#upf-mitra').val(),
+    memahami:      $('#upf-memahami').val(),
+    mengaplikasi:  $('#upf-mengaplikasi').val(),
+    merefleksi:    $('#upf-merefleksi').val(),
+    as_awal:       $('#upf-as-awal').val(),
+    as_proses:     $('#upf-as-proses').val(),
+    as_akhir:      $('#upf-as-akhir').val(),
+    catatan:       $('#upf-catatan').val(),
+    dimensi:       []
+  };
+
+  // Collect checked dimensi
+  $('#dimensiChecks input:checked').each(function() {
+    data.dimensi.push($(this).val());
+  });
+
+  if (!data.tujuan.trim()) {
+    alert('Mohon isi Tujuan Pembelajaran pada Langkah 2.');
+    upfGoTo(2);
+    return;
+  }
+  if (data.dimensi.length === 0) {
+    alert('Mohon pilih minimal satu Dimensi Profil Lulusan.');
+    upfGoTo(1);
+    return;
+  }
+
+  console.log('Unit Plan submitted:', data);
+
+  // Supabase-ready stub (replace fetch with actual Supabase insert in production)
+  // fetch('/api/unit-plans', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(data)
+  // });
+
+  // Generate plain-text preview for download
+  var txt = generateUnitPlanText(data);
+  downloadFile('RPM-' + (data.topik || data.mapel).replace(/\s+/g, '-') + '.txt', txt);
+
+  alert('✅ Unit Plan berhasil disimpan! File teks telah diunduh. Salin ke Google Docs atau Word untuk format lengkap.');
+}
+
+function generateUnitPlanText(d) {
+  var lines = [
+    '══════════════════════════════════════════',
+    'RENCANA PELAKSANAAN PEMBELAJARAN MENDALAM',
+    'SekolahMania.com · ' + new Date().toLocaleDateString('id-ID'),
+    '══════════════════════════════════════════',
+    '',
+    'MATA PELAJARAN : ' + d.mapel,
+    'KELAS / FASE   : ' + d.kelas,
+    'ALOKASI WAKTU  : ' + (d.waktu || '-'),
+    'DIMENSI PROFIL : ' + (d.dimensi.join(', ') || '-'),
+    '',
+    '── IDENTIFIKASI ──────────────────────────',
+    'Profil Peserta Didik:',
+    d.profil || '(opsional)',
+    '',
+    '── DESAIN PEMBELAJARAN ───────────────────',
+    'Tujuan Pembelajaran:',
+    d.tujuan,
+    '',
+    'Topik       : ' + (d.topik || '-'),
+    'Pedagogis   : ' + d.pedagogi,
+    'Lingkungan  : ' + (d.lingkungan || '-'),
+    'Kemitraan   : ' + (d.mitra || '-'),
+    '',
+    '── PENGALAMAN BELAJAR ────────────────────',
+    '1. MEMAHAMI (Berkesadaran, Bermakna):',
+    d.memahami || '-',
+    '',
+    '2. MENGAPLIKASI (Bermakna, Menggembirakan):',
+    d.mengaplikasi || '-',
+    '',
+    '3. MEREFLEKSI (Berkesadaran, Regulasi Diri):',
+    d.merefleksi || '-',
+    '',
+    '── ASESMEN ───────────────────────────────',
+    'Awal  : ' + (d.as_awal || '-'),
+    'Proses: ' + (d.as_proses || '-'),
+    'Akhir : ' + (d.as_akhir || '-'),
+    '',
+    'Catatan: ' + (d.catatan || '-'),
+    '',
+    '══════════════════════════════════════════',
+    'Dibuat di SekolahMania.com',
+    'Pembicara: Ayuk Ratna Puspaningsih',
+    'SMA Negeri Bali Mandara',
+  ];
+  return lines.join('\n');
+}
+
+function downloadFile(filename, text) {
+  var el = document.createElement('a');
+  el.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  el.setAttribute('download', filename);
+  el.style.display = 'none';
+  document.body.appendChild(el);
+  el.click();
+  document.body.removeChild(el);
+}
+
+// ── Dimensi checkbox visual toggle ──────────
+$(document).on('change', '#dimensiChecks input[type=checkbox]', function() {
+  $(this).closest('.dimensi-check-item').toggleClass('checked', this.checked);
+});
+
+// ── Q&A Submission ────────────────────────────
+function submitQA() {
+  var name    = $('#qaName').val().trim();
+  var school  = $('#qaSchool').val().trim();
+  var subject = $('#qaSubject').val();
+  var message = $('#qaMessage').val().trim();
+
+  if (!name || !message) {
+    alert('Mohon isi nama dan pertanyaan Anda.');
+    return;
+  }
+
+  var payload = { name, school, subject, message, created_at: new Date().toISOString() };
+  console.log('Q&A submitted:', payload);
+
+  // Supabase stub:
+  // fetch(SUPABASE_URL + '/rest/v1/questions', {
+  //   method: 'POST',
+  //   headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+  //   body: JSON.stringify(payload)
+  // });
+
+  $('#qaName, #qaSchool, #qaMessage').val('');
+  $('#qaSubject').prop('selectedIndex', 0);
+  $('#qaSuccess').fadeIn(300);
+  setTimeout(function() { $('#qaSuccess').fadeOut(300); }, 5000);
+}
+
+// ── Feedback Submission ────────────────────────
+function submitFeedback() {
+  var name    = $('#fbName').val().trim();
+  var school  = $('#fbSchool').val().trim();
+  var session = $('#fbSession').val();
+  var message = $('#fbMessage').val().trim();
+
+  if (!name || !message) {
+    alert('Mohon isi nama dan umpan balik Anda.');
+    return;
+  }
+
+  var payload = { name, school, session, rating: currentRating, message, created_at: new Date().toISOString() };
+  console.log('Feedback submitted:', payload);
+
+  // Supabase stub:
+  // fetch(SUPABASE_URL + '/rest/v1/feedback', {
+  //   method: 'POST',
+  //   headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+  //   body: JSON.stringify(payload)
+  // });
+
+  $('#fbName, #fbSchool, #fbMessage').val('');
+  $('#fbSession').prop('selectedIndex', 0);
+  currentRating = 0;
+  $('#starRating .rating-star').removeClass('active');
+  $('#fbSuccess').fadeIn(300);
+  setTimeout(function() { $('#fbSuccess').fadeOut(300); }, 5000);
+}
+
+// ══════════════════════════════════════════════
+//  DOM READY
+// ══════════════════════════════════════════════
+$(document).ready(function() {
+
+  // ── Smooth scroll with fixed nav offset ──────
+  $(document).on('click', 'a[href^="#"]', function(e) {
+    var hash = this.hash;
+    if (!hash || hash === '#') return;
+    var $target = $(hash);
+    if (!$target.length) return;
+    e.preventDefault();
+    closeNav();
+    $('html,body').animate({ scrollTop: $target.offset().top - 80 }, 420, 'swing');
+  });
+
+  // ── Intersection Observer — scroll reveals ───
+  if ('IntersectionObserver' in window) {
+    var revObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      revObs.observe(el);
+    });
+  } else {
+    $('.reveal').addClass('visible');
+  }
+
+  // ── Scroll — nav background + progress + back-to-top ──
+  var $progressStrip = $('#progressStrip');
+  var $progressDots  = $('.prog-mod-fill');
+  var $progressPct   = $('#progressPct');
+  var $backTop       = $('#backTop');
+  var $allSections   = $('section[id]');
+  var $body          = $(document.body);
+
+  $(window).on('scroll.sekolahmania', function() {
+    var scrollTop = $(this).scrollTop();
+    var docH      = $(document).height() - $(window).height();
+    var pct       = docH > 0 ? Math.round((scrollTop / docH) * 100) : 0;
+
+    // Nav opacity
+    $('#mainNav').css('background', scrollTop > 60
+      ? 'rgba(13, 33, 55, 0.98)'
+      : 'rgba(13, 33, 55, 0.92)');
+
+    // Progress strip (show after scrolling past hero)
+    if (scrollTop > 500) {
+      $progressStrip.show();
+    } else {
+      $progressStrip.hide();
+    }
+
+    // Fill each progress segment proportionally across 6 modules
+    var segPct = Math.min(100, pct * 6);
+    $progressDots.each(function(i) {
+      var fill = Math.min(100, Math.max(0, segPct - i * 100));
+      $(this).css('width', fill + '%');
+      $(this).closest('.prog-mod').toggleClass('complete', fill >= 100);
+    });
+    $progressPct.text(pct + '%');
+
+    // Back-to-top
+    $backTop.toggleClass('visible', scrollTop > 400);
+
+    // Active nav link highlighting
+    $allSections.each(function() {
+      var top    = $(this).offset().top - 100;
+      var bottom = top + $(this).outerHeight();
+      var id     = $(this).attr('id');
+      if (scrollTop >= top && scrollTop < bottom) {
+        $('.nav-links a').removeClass('active');
+        $('.nav-links a[href="#' + id + '"]').addClass('active');
+      }
+    });
+  });
+
+  // ── i18n data-i18n fallback pattern (Aloha SEO-safe) ──
+  // English default text is already in HTML; locale overlay goes here.
+  // var lang = navigator.language.slice(0, 2) || 'id';
+  // $.getJSON('/js/i18n/' + lang + '.json?2', function(strings) {
+  //   $('[data-i18n]').each(function() {
+  //     var key = $(this).data('i18n');
+  //     if (strings[key]) $(this).text(strings[key]);
+  //   });
+  // });
+
+  // ── Animate stacked PISA bars on scroll into view ──
+  if ('IntersectionObserver' in window) {
+    var pisaObs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        // bars are already at correct width via inline style; just trigger repaint
+        pisaObs.disconnect();
+      }
+    }, { threshold: 0.3 });
+    var pisaEl = document.querySelector('.pisa-bars');
+    if (pisaEl) pisaObs.observe(pisaEl);
+  }
+
+  // ── Plausible-style analytics proxy (Aloha takeaway #3) ──
+  // Fire a pageview event through our own domain proxy to avoid adblocker drops
+  // fetch('/stats/api/event', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ n: 'pageview', u: location.href, d: 'sekolahmania.com', r: document.referrer })
+  // });
+
+}); // end document.ready
+</script>
+
+</body>
+</html>
