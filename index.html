@@ -191,7 +191,6 @@
         border-radius: 6px;
         font-weight: 700 !important;
         font-size: 13px !important;
-        color: var(--navy);
         transition:
           background 0.2s,
           transform 0.15s !important;
@@ -2570,6 +2569,37 @@
         .media-tabs {
           flex-wrap: wrap;
         }
+
+        /* BUG-6 fix: qa-layout 2-col → 1-col on mobile */
+        .qa-layout {
+          grid-template-columns: 1fr;
+        }
+
+        /* BUG-7 fix: footer-top 3-col → 1-col on mobile */
+        .footer-top {
+          grid-template-columns: 1fr;
+          gap: 32px;
+        }
+
+        /* BUG-8 fix: feedback form-row 2-col → 1-col on mobile */
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        /* BUG-9 fix: reduce section vertical padding on mobile */
+        .section {
+          padding: 64px 0;
+        }
+
+        /* BUG-10 fix: reduce cta-inner horizontal padding on mobile */
+        .cta-inner {
+          padding: 0 24px;
+        }
+
+        /* BUG-11 fix: reduce section-inner horizontal padding on mobile */
+        .section-inner {
+          padding: 0 24px;
+        }
       }
     </style>
   </head>
@@ -4525,7 +4555,7 @@
             </p>
             <div class="footer-badges">
               <span class="footer-badge">Next.js 16</span>
-              <span class="footer-badge">Supabase</span>
+              <span class="footer-badge">Convex</span>
               <span class="footer-badge">H5P</span>
               <span class="footer-badge">Vercel</span>
               <span class="footer-badge">Kemendikdasmen RI</span>
@@ -4596,9 +4626,11 @@
       var upfCurrentStep = 1;
       var upfTotalSteps = 4;
 
-      // ── Supabase config (replace with real values) ─
-      var SUPABASE_URL = "https://your-project.supabase.co";
-      var SUPABASE_ANON = "your-anon-key";
+      // ── Convex HTTP Actions config ─────────────────
+      // LOCAL DEV:  "http://127.0.0.1:3211"
+      // CLOUD:      "https://<your-slug>.convex.site"
+      // SELF-HOST:  "https://convex.sekolahmania.com"
+      var CONVEX_HTTP_URL = "https://<your-slug>.convex.site";
 
       // ── Nav: open / close (Aloha global onclick pattern) ──
       function openNav() {
@@ -4709,12 +4741,21 @@
 
         console.log("Unit Plan submitted:", data);
 
-        // Supabase-ready stub (replace fetch with actual Supabase insert in production)
-        // fetch('/api/unit-plans', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(data)
-        // });
+        fetch(CONVEX_HTTP_URL + "/submitUnitPlan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (result) {
+            if (!result.success)
+              console.error("Unit plan error:", result.error);
+          })
+          .catch(function (err) {
+            console.error("Unit plan network error:", err);
+          });
 
         // Generate plain-text preview for download
         var txt = generateUnitPlanText(data);
@@ -4819,16 +4860,23 @@
           school,
           subject,
           message,
-          created_at: new Date().toISOString(),
         };
         console.log("Q&A submitted:", payload);
 
-        // Supabase stub:
-        // fetch(SUPABASE_URL + '/rest/v1/questions', {
-        //   method: 'POST',
-        //   headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        //   body: JSON.stringify(payload)
-        // });
+        fetch(CONVEX_HTTP_URL + "/submitQuestion", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (data) {
+            if (!data.success) console.error("Q&A error:", data.error);
+          })
+          .catch(function (err) {
+            console.error("Q&A network error:", err);
+          });
 
         $("#qaName, #qaSchool, #qaMessage").val("");
         $("#qaSubject").prop("selectedIndex", 0);
@@ -4856,16 +4904,23 @@
           session,
           rating: currentRating,
           message,
-          created_at: new Date().toISOString(),
         };
         console.log("Feedback submitted:", payload);
 
-        // Supabase stub:
-        // fetch(SUPABASE_URL + '/rest/v1/feedback', {
-        //   method: 'POST',
-        //   headers: { 'apikey': SUPABASE_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        //   body: JSON.stringify(payload)
-        // });
+        fetch(CONVEX_HTTP_URL + "/submitFeedback", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+          .then(function (res) {
+            return res.json();
+          })
+          .then(function (data) {
+            if (!data.success) console.error("Feedback error:", data.error);
+          })
+          .catch(function (err) {
+            console.error("Feedback network error:", err);
+          });
 
         $("#fbName, #fbSchool, #fbMessage").val("");
         $("#fbSession").prop("selectedIndex", 0);
@@ -4923,7 +4978,6 @@
         var $progressPct = $("#progressPct");
         var $backTop = $("#backTop");
         var $allSections = $("section[id]");
-        var $body = $(document.body);
 
         $(window).on("scroll.sekolahmania", function () {
           var scrollTop = $(this).scrollTop();
