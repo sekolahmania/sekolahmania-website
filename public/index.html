@@ -19,8 +19,16 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sekolahmania.com" />
+    <meta
+      property="og:image"
+      content="https://sekolahmania.com/img/icon-512.png"
+    />
 
-    <!-- PWA manifest + icons (see manifest.json) -->
+    <!-- Favicon -->
+    <link rel="icon" href="/img/favicon.ico" sizes="any" />
+    <link rel="icon" href="/img/favicon.svg" type="image/svg+xml" />
+
+    <!-- PWA manifest + icons -->
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/img/icon-192.png" />
 
@@ -158,17 +166,17 @@
       .nav-logo-mark {
         width: 36px;
         height: 36px;
-        background: var(--teal-mid);
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: var(--display);
-        font-size: 18px;
-        font-weight: 800;
-        color: #fff;
-        letter-spacing: -1px;
         flex-shrink: 0;
+        overflow: hidden;
+      }
+      .nav-logo-mark img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
 
       .nav-logo-text {
@@ -552,7 +560,7 @@
         animation: fadeUp 0.8s 0.3s ease both;
       }
       .speaker-card::before {
-        content: "PEMBICARA UTAMA";
+        content: "KONTRIBUTOR UTAMA";
         position: absolute;
         top: -12px;
         left: 24px;
@@ -589,6 +597,12 @@
         font-weight: 800;
         color: #fff;
         overflow: hidden;
+      }
+      .speaker-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
       }
       .speaker-avatar-ring {
         position: absolute;
@@ -1875,6 +1889,28 @@
         font-size: 11px;
         color: rgba(255, 255, 255, 0.25);
       }
+      .footer-dev {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.3);
+        width: fit-content;
+      }
+      .footer-dev img {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid rgba(62, 202, 183, 0.35);
+      }
+      .footer-dev strong {
+        color: var(--teal-lt);
+        font-weight: 600;
+      }
       .footer-stack {
         display: flex;
         align-items: center;
@@ -3147,7 +3183,14 @@
 
     <nav class="nav" id="mainNav">
       <a class="nav-logo" href="#" onclick="return false;">
-        <div class="nav-logo-mark">S</div>
+        <div class="nav-logo-mark">
+          <img
+            src="/img/logo.svg"
+            alt="Logo SekolahMania"
+            width="36"
+            height="36"
+          />
+        </div>
         <span class="nav-logo-text">Sekolah<em>Mania</em></span>
       </a>
 
@@ -3234,7 +3277,15 @@
       <div class="hero-right">
         <div class="speaker-card">
           <div class="speaker-avatar-wrap">
-            <div class="speaker-avatar">A</div>
+            <div class="speaker-avatar">
+              <img
+                src="/img/ayuk-ratna.webp"
+                alt="Foto Ayuk Ratna Puspaningsih"
+                width="90"
+                height="90"
+                loading="lazy"
+              />
+            </div>
             <div class="speaker-avatar-ring"></div>
           </div>
 
@@ -5983,7 +6034,7 @@
               Didedikasikan untuk kemajuan pendidikan Nusantara.
             </p>
             <div class="footer-badges">
-              <span class="footer-badge">Next.js 16</span>
+              <span class="footer-badge">HTML + jQuery</span>
               <span class="footer-badge">Convex</span>
               <span class="footer-badge">H5P</span>
               <span class="footer-badge">Vercel</span>
@@ -6027,8 +6078,18 @@
 
         <div class="footer-bottom">
           <div class="footer-copy">
-            © 2026 SekolahMania.com · Pembicara: Ayuk Ratna Puspaningsih, SMA
+            © 2026 SekolahMania.com · Narasumber: Ayuk Ratna Puspaningsih, SMA
             Negeri Bali Mandara
+            <span class="footer-dev">
+              <img
+                src="/img/suta-pinatih.webp"
+                alt="Foto I Gede Suta Pinatih"
+                width="22"
+                height="22"
+                loading="lazy"
+              />
+              Dikembangkan oleh <strong>I Gede Suta Pinatih</strong>
+            </span>
           </div>
           <div class="footer-stack">
             <span>sekolahmania.com</span>
@@ -6047,7 +6108,7 @@
     <script>
       // ═══════════════════════════════════════════════
       //  SekolahMania — scripts.js (Aloha-style jQuery)
-      //  Cache-bust: ?3  (Panduan STEM merge + Roadmap optimizations)
+      //  Cache-bust: ?4  (image assets, logo, photos, public/ restructure)
       // ═══════════════════════════════════════════════
 
       // ── State ──────────────────────────────────────
@@ -6363,7 +6424,7 @@
           "",
           "══════════════════════════════════════════",
           "Dibuat di SekolahMania.com",
-          "Pembicara: Ayuk Ratna Puspaningsih",
+          "Kontributor: Ayuk Ratna Puspaningsih",
           "SMA Negeri Bali Mandara",
         ];
         return lines.join("\n");

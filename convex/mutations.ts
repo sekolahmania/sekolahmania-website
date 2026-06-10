@@ -3,6 +3,7 @@ import { v } from "convex/values";
 
 // SekolahMania — database write functions
 // Each mutation validates its args and inserts one document.
+// (Queries live in queries.ts, e.g. listRecentQuestions.)
 
 export const insertQuestion = mutation({
   args: {
@@ -51,15 +52,5 @@ export const insertUnitPlan = mutation({
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("unit_plans", args);
-  },
-});
-
-// Optional: live Q&A feed for a future realtime widget (see CONVEX_MIGRATION.md)
-import { query } from "./_generated/server";
-
-export const listRecentQuestions = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db.query("questions").order("desc").take(20);
   },
 });

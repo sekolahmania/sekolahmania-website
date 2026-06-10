@@ -1,7 +1,7 @@
 /* SekolahMania — extracted application logic (Roadmap 1.1)
    Source of truth: final <script> block in index.html.
    To use externally: remove the inline <script> and add
-   <script src="/public/js/app.js?v=1.1" defer></script>
+   <script src="/js/app.js?v=1.1" defer></script>
    (jQuery + html2pdf must still load before this file). */
 
 // ═══════════════════════════════════════════════
@@ -17,10 +17,22 @@
       // ── Roadmap 1.3 — Unit Plan autosave (localStorage) ──
       var UPF_STORAGE_KEY = "sekolahmania_rpm_draft_v1";
       var UPF_FIELDS = [
-        "upf-mapel", "upf-kelas", "upf-waktu", "upf-profil",
-        "upf-tujuan", "upf-topik", "upf-pedagogi", "upf-lingkungan",
-        "upf-mitra", "upf-memahami", "upf-mengaplikasi", "upf-merefleksi",
-        "upf-as-awal", "upf-as-proses", "upf-as-akhir", "upf-catatan",
+        "upf-mapel",
+        "upf-kelas",
+        "upf-waktu",
+        "upf-profil",
+        "upf-tujuan",
+        "upf-topik",
+        "upf-pedagogi",
+        "upf-lingkungan",
+        "upf-mitra",
+        "upf-memahami",
+        "upf-mengaplikasi",
+        "upf-merefleksi",
+        "upf-as-awal",
+        "upf-as-proses",
+        "upf-as-akhir",
+        "upf-catatan",
       ];
 
       // ── Convex HTTP Actions config ─────────────────
@@ -190,7 +202,9 @@
       function generateUnitPlanPDF(d) {
         var dimensiList = d.dimensi.length ? d.dimensi.join(", ") : "-";
         var esc = function (s) {
-          return $("<span>").text(s || "-").html();
+          return $("<span>")
+            .text(s || "-")
+            .html();
         };
         var html =
           '<div style="font-family: Figtree, Arial, sans-serif; color:#0d2137; padding:32px; max-width:780px;">' +
@@ -214,8 +228,14 @@
           sectionPDF("Kemitraan", esc(d.mitra)) +
           '<h3 style="font-size:14px; color:#0e7c6e; margin:24px 0 8px;">Pengalaman Belajar</h3>' +
           sectionPDF("1. Memahami (Berkesadaran, Bermakna)", esc(d.memahami)) +
-          sectionPDF("2. Mengaplikasi (Bermakna, Menggembirakan)", esc(d.mengaplikasi)) +
-          sectionPDF("3. Merefleksi (Berkesadaran, Regulasi Diri)", esc(d.merefleksi)) +
+          sectionPDF(
+            "2. Mengaplikasi (Bermakna, Menggembirakan)",
+            esc(d.mengaplikasi),
+          ) +
+          sectionPDF(
+            "3. Merefleksi (Berkesadaran, Regulasi Diri)",
+            esc(d.merefleksi),
+          ) +
           '<h3 style="font-size:14px; color:#0e7c6e; margin:24px 0 8px;">Asesmen</h3>' +
           sectionPDF("Awal (Diagnostik)", esc(d.as_awal)) +
           sectionPDF("Proses (Formatif)", esc(d.as_proses)) +
@@ -302,7 +322,7 @@
           "",
           "══════════════════════════════════════════",
           "Dibuat di SekolahMania.com",
-          "Pembicara: Ayuk Ratna Puspaningsih",
+          "Kontributor: Ayuk Ratna Puspaningsih",
           "SMA Negeri Bali Mandara",
         ];
         return lines.join("\n");
