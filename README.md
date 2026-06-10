@@ -16,7 +16,7 @@
 - [Sections & Fitur](#sections--fitur)
 - [Desain Sistem (CSS Tokens)](#desain-sistem-css-tokens)
 - [JavaScript](#javascript)
-- [Formulir & Backend (Supabase)](#formulir--backend-supabase)
+- [Formulir & Backend (Convex)](#formulir--backend-convex)
 - [Internasionalisasi (i18n)](#internasionalisasi-i18n)
 - [Deployment](#deployment)
 - [Roadmap](#roadmap)
@@ -29,7 +29,9 @@
 
 SekolahMania adalah situs web statis satu halaman (*single-page static site*) yang dirancang sebagai platform pelatihan guru untuk program **Pembelajaran Mendalam (PM)** dari Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen) Republik Indonesia. Platform ini memuat materi, aktivitas interaktif H5P, alat perancangan RPM (*Rencana Pelaksanaan Pembelajaran Mendalam*), media hub video/dokumen, serta formulir Q&A dan umpan balik peserta.
 
-Platform ini dibangun dengan filosofi arsitektur **zero-framework** — terinspirasi dari pendekatan Aloha Browser: HTML statis, jQuery, CSS semantik buatan sendiri, tanpa bundler, tanpa runtime, tanpa hidration overhead.
+Platform ini dibangun dengan filosofi arsitektur **zero-framework** — terinspirasi dari pendekatan Aloha Browser: HTML statis, jQuery, CSS semantik buatan sendiri, tanpa bundler, tanpa runtime, tanpa hidration overhead. Backend menggunakan **Convex** (cloud-hosted atau self-hosted) melalui HTTP Actions yang dipanggil langsung via `fetch()` dari HTML statis.
+
+**GitHub Repository:** [https://github.com/sekolahmania/sekolahmania-website](https://github.com/sekolahmania/sekolahmania-website)
 
 ### Konteks Konten
 
@@ -96,9 +98,17 @@ Platform ini didasarkan pada dokumen resmi **"Pembelajaran Mendalam: Menuju Pend
 ## Struktur File
 
 ```
-sekolahmania/
-├── sekolahmania.html        # Seluruh aplikasi (1 file, 3.704 baris)
+sekolahmania-website/          # github.com/sekolahmania/sekolahmania-website
+├── index.html               # Seluruh aplikasi frontend (1 file, 5.064 baris)
 ├── README.md                # Dokumentasi ini
+├── CONVEX_MIGRATION.md      # Panduan migrasi Supabase → Convex
+├── .env.local               # Convex credentials (JANGAN di-commit ke Git)
+│
+├── convex/                  # Convex backend functions
+│   ├── _generated/          # Auto-generated — jangan diedit manual
+│   ├── schema.ts            # Definisi dokumen (pengganti SQL DDL)
+│   ├── mutations.ts         # Fungsi database write
+│   └── http.ts              # HTTP Action router (endpoint publik)
 │
 ├── js/                      # (production) — pisahkan dari inline
 │   ├── scripts.js?2         # Semua logika jQuery (cache-bust manual)
@@ -115,7 +125,17 @@ sekolahmania/
     └── stats/               # Plausible proxy endpoint
 ```
 
-> **Catatan:** Saat ini seluruh CSS, HTML, dan JS ada dalam satu file `sekolahmania.html` untuk kemudahan deployment awal. Untuk production, ekstrak ke file terpisah mengikuti pola di atas.
+> **Catatan:** Saat ini seluruh CSS, HTML, dan JS ada dalam satu file `index.html` untuk kemudahan deployment awal. Untuk production, ekstrak ke file terpisah mengikuti pola di atas.
+
+### `.env.local` — Konfigurasi Convex
+
+```bash
+# .env.local — JANGAN commit file ini ke Git (sudah ada di .gitignore)
+CONVEX_SELF_HOSTED_URL=http://127.0.0.1:3210
+CONVEX_SELF_HOSTED_ADMIN_KEY=convex-self-hosted|<hex-key>
+```
+
+> ⚠️ **Penting:** Key harus menyertakan prefix `convex-self-hosted|` secara lengkap — termasuk karakter `|`. Menghilangkan prefix ini menyebabkan error `401 Unauthorized: BadAdminKey` saat `npx convex deploy`.
 
 ---
 
@@ -153,6 +173,13 @@ sekolahmania/
 - Setiap card: nomor, emoji, judul, deskripsi singkat
 - Scroll reveal bertahap dengan `reveal-delay`
 
+### 6b. `#panduan` — Panduan STEM ⭐ (BARU)
+Ringkasan lengkap **Panduan Pembelajaran STEM** (BSKAP, Kemendikdasmen RI 2025, 298 halaman) yang digabung dari `panduan-stem-sma.html`:
+- **STEM letter grid** — 4 kartu S·T·E·M dengan warna khas (teal/amber/navy/red)
+- **7-tab switcher** (`switchPanduan()`): Pendahuluan · Kerangka · Pemangku Kepentingan · Implementasi · Fokus SMA · Asesmen · Istilah
+- Konten kaya: accordion model pembelajaran (PjBL, 5E, Laboy-Rush), tabel asesmen, contoh proyek SMA (perubahan iklim + distribusi normal), glosarium
+- Accordion `slideUp/slideDown`, tabel responsif, callout boxes (teal/amber/navy)
+
 ### 7. `#aktivitas` — Aktivitas H5P
 - 6 activity cards di dark navy background
 - Badge jenis: H5P Course Presentation, Documentation Tool, Branching Scenario, YouTube, Interactive Video, Google Drive
@@ -168,7 +195,7 @@ sekolahmania/
 | 3. Pengalaman Belajar | Textarea: Memahami / Mengaplikasi / Merefleksi |
 | 4. Asesmen | Diagnostik, formatif, sumatif, catatan tambahan |
 
-**Output:** Generate file `.txt` dan download otomatis via `data:` URI. Siap dihubungkan ke Supabase untuk penyimpanan cloud.
+**Output:** Generate file `.txt` dan download otomatis via `data:` URI. Data juga dikirim ke Convex via `fetch(CONVEX_HTTP_URL + '/submitUnitPlan', ...)` dan disimpan di collection `unit_plans`.
 
 ### 9. `#media` — Media Hub
 Tab switcher antara dua panel:
@@ -245,6 +272,21 @@ Semua warna dan font didefinisikan sebagai CSS Custom Properties di `:root`:
 
 Semua logika ditulis dengan jQuery 3.7.0 mengikuti pola Aloha Browser (global `onclick` handlers, `$(document).ready()`). Tidak ada module system, tidak ada event delegation abstraction.
 
+### Konfigurasi
+
+```javascript
+// ── State ──────────────────────────────────────
+var currentRating  = 0;
+var upfCurrentStep = 1;
+var upfTotalSteps  = 4;
+
+// ── Convex HTTP Actions config ─────────────────
+// LOCAL DEV:  "http://127.0.0.1:3211"
+// CLOUD:      "https://<your-slug>.convex.site"
+// SELF-HOST:  "https://convex.sekolahmania.com"
+var CONVEX_HTTP_URL = "https://<your-slug>.convex.site";
+```
+
 ### Fungsi Global (`onclick` pattern)
 
 ```javascript
@@ -284,79 +326,122 @@ Digunakan untuk **scroll reveal animations** (`class="reveal"`) — 67 elemen. M
 
 ---
 
-## Formulir & Backend (Supabase)
+## Formulir & Backend (Convex)
 
-Saat ini semua form menggunakan `console.log()` sebagai stub. Untuk production, ganti dengan Supabase REST API:
+Semua form (`submitQA`, `submitFeedback`, `upfSubmit`) memanggil **Convex HTTP Actions** — endpoint HTTPS publik yang dapat dipanggil langsung dari `fetch()` tanpa SDK khusus. Tidak ada `apikey` header. Tidak ada SQL.
 
-### Setup Supabase
+### Arsitektur Convex untuk Proyek Ini
+
+```
+index.html (static, zero-framework)
+  └── fetch(CONVEX_HTTP_URL + '/submitQuestion', { method: 'POST', ... })
+  └── fetch(CONVEX_HTTP_URL + '/submitFeedback', { method: 'POST', ... })
+  └── fetch(CONVEX_HTTP_URL + '/submitUnitPlan', { method: 'POST', ... })
+
+Convex backend (cloud atau self-hosted Docker)
+  ├── convex/schema.ts      ← Definisi dokumen (pengganti SQL DDL)
+  ├── convex/mutations.ts   ← Fungsi database write
+  └── convex/http.ts        ← HTTP Action router + CORS handler
+```
+
+### `convex/schema.ts` — Struktur Dokumen
+
+```typescript
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+
+export default defineSchema({
+  questions: defineTable({
+    name:    v.string(),
+    school:  v.optional(v.string()),
+    subject: v.optional(v.string()),
+    message: v.string(),
+    // Catatan: TIDAK ada field created_at —
+    // Convex mengelola _creationTime secara otomatis
+  }),
+  feedback: defineTable({
+    name:    v.string(),
+    school:  v.optional(v.string()),
+    session: v.optional(v.string()),
+    rating:  v.optional(v.number()),
+    message: v.string(),
+  }),
+  unit_plans: defineTable({
+    mapel:        v.string(),
+    kelas:        v.optional(v.string()),
+    waktu:        v.optional(v.string()),
+    profil:       v.optional(v.string()),
+    tujuan:       v.string(),
+    topik:        v.optional(v.string()),
+    pedagogi:     v.optional(v.string()),
+    lingkungan:   v.optional(v.string()),
+    mitra:        v.optional(v.string()),
+    memahami:     v.optional(v.string()),
+    mengaplikasi: v.optional(v.string()),
+    merefleksi:   v.optional(v.string()),
+    as_awal:      v.optional(v.string()),
+    as_proses:    v.optional(v.string()),
+    as_akhir:     v.optional(v.string()),
+    catatan:      v.optional(v.string()),
+    dimensi:      v.array(v.string()),
+  }),
+});
+```
+
+> ⚠️ **Jangan kirim `created_at`** dari JavaScript — ini bukan field yang terdaftar di schema. Convex menyimpan timestamp otomatis di field internal `_creationTime`. Mengirim `created_at` akan menyebabkan schema validation error pada HTTP Action.
+
+### Deploy Convex Functions
+
+```bash
+# Cloud (convex.dev)
+npx convex deploy
+
+# Self-hosted (Docker lokal)
+npx convex deploy \
+  --url http://127.0.0.1:3210 \
+  --admin-key 'convex-self-hosted|<your-hex-key>'
+```
+
+### Self-Hosting dengan Docker
+
+```bash
+# 1. Download dan jalankan
+curl -o docker-compose.yml \
+  https://raw.githubusercontent.com/get-convex/convex-backend/main/self-hosted/docker/docker-compose.yml
+docker compose up -d
+
+# 2. Generate admin key — SALIN OUTPUT LENGKAP termasuk prefix "convex-self-hosted|"
+docker compose exec backend ./generate_admin_key.sh
+# Output: convex-self-hosted|01153db53d52b8a1abf9a14a01f580c4...
+
+# 3. Simpan ke .env.local (DENGAN prefix lengkap)
+CONVEX_SELF_HOSTED_URL=http://127.0.0.1:3210
+CONVEX_SELF_HOSTED_ADMIN_KEY=convex-self-hosted|01153db53d52b8a1abf9a14a01f580c4...
+
+# 4. Deploy functions
+npx convex deploy
+```
+
+**Port default self-hosted:**
+
+| Service | Port | Keterangan |
+|---|---|---|
+| Convex API (internal) | `3210` | Deploy target, admin operations |
+| HTTP Actions (publik) | `3211` | Endpoint yang dipanggil `fetch()` dari HTML |
+| Dashboard UI | `6791` | Browser admin panel |
+
+### Update `CONVEX_HTTP_URL` di `index.html`
 
 ```javascript
-// Di bagian atas script
-var SUPABASE_URL  = 'https://YOUR_PROJECT.supabase.co';
-var SUPABASE_ANON = 'YOUR_ANON_KEY';
+// Setelah deploy, update baris ini di index.html:
+var CONVEX_HTTP_URL = "https://<your-slug>.convex.site";  // cloud
+// atau
+var CONVEX_HTTP_URL = "https://convex.sekolahmania.com";  // self-hosted dengan domain
+// atau (development lokal saja):
+var CONVEX_HTTP_URL = "http://127.0.0.1:3211";
 ```
 
-### Buat 3 Tabel di Supabase
-
-```sql
--- Pertanyaan Q&A
-create table questions (
-  id         uuid default gen_random_uuid() primary key,
-  name       text not null,
-  school     text,
-  subject    text,
-  message    text not null,
-  created_at timestamptz default now()
-);
-
--- Umpan Balik
-create table feedback (
-  id         uuid default gen_random_uuid() primary key,
-  name       text not null,
-  school     text,
-  session    text,
-  rating     int check (rating between 1 and 5),
-  message    text not null,
-  created_at timestamptz default now()
-);
-
--- Unit Plans
-create table unit_plans (
-  id           uuid default gen_random_uuid() primary key,
-  mapel        text,
-  kelas        text,
-  waktu        text,
-  profil       text,
-  tujuan       text not null,
-  topik        text,
-  pedagogi     text,
-  lingkungan   text,
-  mitra        text,
-  memahami     text,
-  mengaplikasi text,
-  merefleksi   text,
-  as_awal      text,
-  as_proses    text,
-  as_akhir     text,
-  catatan      text,
-  dimensi      text[],
-  created_at   timestamptz default now()
-);
-
--- Aktifkan RLS
-alter table questions  enable row level security;
-alter table feedback   enable row level security;
-alter table unit_plans enable row level security;
-
--- Izinkan insert anonim
-create policy "Allow anon insert" on questions  for insert with check (true);
-create policy "Allow anon insert" on feedback   for insert with check (true);
-create policy "Allow anon insert" on unit_plans for insert with check (true);
-```
-
-### Aktifkan Fetch di Script
-
-Cari komentar `// Supabase stub:` di `sekolahmania.html` dan uncomment blok `fetch()` di setiap fungsi submit.
+Panduan lengkap migrasi dari Supabase ke Convex tersedia di [`CONVEX_MIGRATION.md`](./CONVEX_MIGRATION.md).
 
 ---
 
@@ -457,40 +542,94 @@ Setiap kali mengubah `scripts.js` atau file i18n, naikkan querystring integer:
 
 ---
 
+## Berkas Pendukung Deployment
+
+Semua berkas berikut sudah disertakan dan siap dipakai:
+
+| Berkas | Fungsi |
+|---|---|
+| `index.html` | Aplikasi utama (6.300+ baris) — sudah termasuk Panduan STEM |
+| `convex/schema.ts` | Definisi 3 tabel dokumen (questions, feedback, unit_plans) |
+| `convex/mutations.ts` | Fungsi write + query `listRecentQuestions` |
+| `convex/http.ts` | HTTP Actions router + CORS (3 endpoint form) |
+| `convex-server/docker-compose.yml` | Self-hosted Convex (backend + dashboard) |
+| `package.json` | Dependency `convex` + skrip `dev`/`deploy`/`deploy:selfhosted` |
+| `.env.local.example` | Template kredensial Convex (salin → `.env.local`) |
+| `.gitignore` | Melindungi `.env.local`, `node_modules`, `convex/_generated` |
+| `vercel.json` | Plausible proxy rewrites + cache headers + security headers |
+| `manifest.json` | PWA manifest (installable, theme color, ikon) |
+| `robots.txt` + `sitemap.xml` | SEO dasar |
+| `public/css/style.css` | CSS terekstraksi (Roadmap 1.1) — opsional |
+| `public/js/app.js` | Logika jQuery terekstraksi (Roadmap 1.1) — opsional |
+
+### Urutan deploy yang disarankan
+
+```bash
+# 1. Backend Convex (pilih cloud ATAU self-hosted)
+npm install
+npx convex deploy                      # cloud
+# atau: cd convex-server && docker compose up -d   # self-hosted
+
+# 2. Ambil HTTP Actions URL, lalu set di index.html:
+#    var CONVEX_HTTP_URL = "https://<slug>.convex.site";
+
+# 3. Deploy frontend ke Vercel
+git add . && git commit -m "deploy: SekolahMania v1.1 + Panduan STEM"
+git push
+```
+
+### Roadmap 1.1 — Ekstraksi Aset (opsional)
+
+`public/css/style.css` dan `public/js/app.js` sudah diekstraksi dari `index.html`. Untuk mengaktifkannya, hapus blok `<style>` dan `<script>` inline lalu tautkan:
+
+```html
+<link rel="stylesheet" href="/public/css/style.css?v=1.1" />
+<!-- jQuery + html2pdf dulu, baru: -->
+<script src="/public/js/app.js?v=1.1" defer></script>
+```
+
+> Saat ini `index.html` tetap memakai versi inline agar tetap satu berkas (zero-config deploy). Ekstraksi berguna saat tim bertambah atau caching antar-halaman jadi prioritas.
+
+---
+
 ## Roadmap
 
 ### v1.0 — MVP ✅
-- [x] Landing page lengkap (11 sections)
+- [x] Landing page lengkap (12 sections, termasuk Panduan STEM)
 - [x] Unit Plan Builder 4-step wizard
 - [x] Media Hub (Video + Dokumen tabs)
 - [x] Q&A Form + Feedback Form
 - [x] Responsive mobile-first
 - [x] Progress strip + Back-to-top
-- [x] Supabase-ready stubs
+- [x] Convex HTTP Actions (Q&A, Feedback, Unit Plan) — live
+- [x] Panduan STEM digabung dari `panduan-stem-sma.html`
 
-### v1.1 — Koneksi Backend
-- [ ] Aktifkan Supabase insert untuk Q&A, Feedback, Unit Plans
-- [ ] Admin dashboard sederhana (Supabase Studio / Next.js)
-- [ ] Email notifikasi ke pembicara saat ada pertanyaan masuk (Supabase Edge Functions)
-- [ ] Export Unit Plan ke PDF server-side (Puppeteer / WeasyPrint)
+### v1.1 — Optimasi (dari Roadmap) ✅ sebagian
+- [x] **1.2** Lazy-loading helper untuk `<img>`/`<iframe>` (otomatis)
+- [x] **1.3** Autosave Unit Plan via `localStorage` + restore + clear-on-submit
+- [x] **2.1** Export PDF profesional via `html2pdf.js` (fallback `.txt`)
+- [x] **1.1** Ekstraksi CSS/JS ke `public/` (berkas siap, opsional diaktifkan)
+- [ ] **2.2** Progress tracking via xAPI (butuh embed H5P nyata — saat ini scroll-depth proxy)
+- [ ] **3.1** Skenario fisika H5P (kinematika / energi terbarukan)
 
-### v1.2 — Konten & Media
+### v1.2 — Backend & Konten
+- [ ] Admin dashboard (Convex dashboard / Next.js)
+- [ ] Email notifikasi ke pembicara (Convex scheduled functions / actions)
+- [ ] Realtime live Q&A feed (Convex `listRecentQuestions` + ConvexClient)
 - [ ] Embed YouTube player nyata (iframe lazy-load)
 - [ ] Upload foto pembicara Ibu Ayuk Ratna Puspaningsih
-- [ ] `<picture>` WebP + PNG untuk semua gambar
-- [ ] `loading="lazy"` pada semua `<img>`
 - [ ] H5P embed aktif via iFrame
 
 ### v1.3 — Fitur Lanjutan
 - [ ] i18n bilingual ID/EN (aktifkan loader)
-- [ ] Plausible analytics proxy
-- [ ] PWA manifest (`manifest.json`, service worker)
+- [x] PWA manifest (`manifest.json`) — terpasang; tambah service worker untuk offline
+- [ ] Plausible analytics proxy (config `vercel.json` siap)
 - [ ] Pencarian materi (Fuse.js lightweight fuzzy search)
 - [ ] Mode gelap/terang toggle
 
 ### v2.0 — Integrasi Ekosistem
 - [ ] Integrasi dengan **NusaBaliConnect** (tourism platform)
-- [ ] Modul untuk **Mai-Milu** community (carpooling community learning)
+- [ ] Modul untuk **Mai-Milu** community
 - [ ] Multi-speaker support (lebih dari satu narasumber)
 - [ ] LMS sederhana: tracking progress per peserta
 

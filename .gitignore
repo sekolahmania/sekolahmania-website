@@ -1,14 +1,26 @@
-# Environment variables (Secrets)
+# Dependencies
+node_modules/
+.npm/
+
+# Environment & secrets — NEVER commit these
 .env
 .env.local
-.env.*
+.env.*.local
 
-# Dependencies (Bulky files)
-node_modules/
-
-# Convex auto-generated files (These regenerate on their own)
+# Convex auto-generated code (regenerated on deploy)
 convex/_generated/
 
-# OS generated files
+# Self-hosted Convex Docker data
+convex-server/data/
+convex-server/.env.local
+
+# Build / OS / editor artifacts
+dist/
 .DS_Store
 Thumbs.db
+*.log
+.vscode/
+.idea/
+
+# Vercel
+.vercel

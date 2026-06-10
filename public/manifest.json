@@ -1,0 +1,28 @@
+{
+  "name": "SekolahMania — Pembelajaran Mendalam STEM",
+  "short_name": "SekolahMania",
+  "description": "Platform pelatihan guru STEM interaktif untuk sekolah menengah Indonesia. Pembelajaran Mendalam & Pembelajaran STEM.",
+  "lang": "id",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fbf8f3",
+  "theme_color": "#0d2137",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

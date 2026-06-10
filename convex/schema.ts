@@ -1,13 +1,21 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+// SekolahMania — Convex document schema
+// NOTE: Do NOT add a `created_at` field. Convex automatically manages
+// a built-in `_creationTime` timestamp on every document. Sending
+// `created_at` from the client will trigger a schema validation error.
+
 export default defineSchema({
+  // Q&A questions submitted by teachers (#tanya form)
   questions: defineTable({
     name: v.string(),
     school: v.optional(v.string()),
     subject: v.optional(v.string()),
     message: v.string(),
   }),
+
+  // Session feedback (#feedback form)
   feedback: defineTable({
     name: v.string(),
     school: v.optional(v.string()),
@@ -15,6 +23,8 @@ export default defineSchema({
     rating: v.optional(v.number()),
     message: v.string(),
   }),
+
+  // Unit Plan Builder submissions (#unitplan wizard — RPM drafts)
   unit_plans: defineTable({
     mapel: v.string(),
     kelas: v.optional(v.string()),

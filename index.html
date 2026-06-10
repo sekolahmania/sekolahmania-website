@@ -19,6 +19,11 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://sekolahmania.com" />
+
+    <!-- PWA manifest + icons (see manifest.json) -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/img/icon-192.png" />
+
     <title>SekolahMania — Pembelajaran Mendalam STEM</title>
 
     <!-- Fonts: Distinctive pairing — Fraunces (editorial serif display) + Figtree (clean humanist sans) -->
@@ -35,6 +40,15 @@
       integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- html2pdf.js — professional RPM PDF export (Roadmap 2.1), deferred.
+         No SRI hash pinned: verify and add integrity in your build if desired. -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      defer
     ></script>
 
     <style>
@@ -58,6 +72,10 @@
         --ink4: #8fa4b0;
         --border: #d8e4e0;
         --border2: #c2d6d0;
+
+        /* STEM accent palette (Panduan STEM) */
+        --red: #e05252;
+        --green: #2eaa7a;
 
         /* Fonts */
         --display: "Fraunces", Georgia, serif;
@@ -2597,6 +2615,458 @@
           padding: 0 24px;
         }
       }
+
+      /* ═══════════════════════════════════════════
+   PANDUAN STEM SECTION (merged from panduan-stem-sma.html)
+═══════════════════════════════════════════ */
+      .panduan-section {
+        background: var(--cream2);
+      }
+
+      /* STEM letter grid */
+      .stem-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin: 32px 0;
+      }
+      .stem-cell {
+        border-radius: 14px;
+        padding: 22px 18px;
+        text-align: center;
+        transition: transform 0.2s;
+      }
+      .stem-cell:hover {
+        transform: translateY(-4px);
+      }
+      .stem-cell.s {
+        background: rgba(20, 160, 144, 0.1);
+        border: 1px solid rgba(20, 160, 144, 0.25);
+      }
+      .stem-cell.t {
+        background: rgba(245, 157, 42, 0.1);
+        border: 1px solid rgba(245, 157, 42, 0.25);
+      }
+      .stem-cell.e {
+        background: rgba(13, 33, 55, 0.07);
+        border: 1px solid rgba(13, 33, 55, 0.15);
+      }
+      .stem-cell.m {
+        background: rgba(224, 82, 82, 0.08);
+        border: 1px solid rgba(224, 82, 82, 0.2);
+      }
+      .stem-letter {
+        font-family: var(--display);
+        font-size: 34px;
+        font-weight: 800;
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .stem-cell.s .stem-letter {
+        color: var(--teal);
+      }
+      .stem-cell.t .stem-letter {
+        color: #b36b00;
+      }
+      .stem-cell.e .stem-letter {
+        color: var(--navy);
+      }
+      .stem-cell.m .stem-letter {
+        color: var(--red);
+      }
+      .stem-name {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--ink3);
+        margin-bottom: 8px;
+      }
+      .stem-desc {
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--ink3);
+      }
+
+      /* Panduan tab navigation (Bab switcher) */
+      .panduan-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--border);
+        border-radius: 12px;
+        padding: 4px;
+        margin-bottom: 36px;
+        flex-wrap: wrap;
+      }
+      .panduan-tab {
+        flex: 1;
+        min-width: 120px;
+        padding: 11px 16px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+        color: var(--ink3);
+        border: none;
+        background: transparent;
+        font-family: var(--body);
+        text-align: center;
+      }
+      .panduan-tab.active {
+        background: var(--white);
+        color: var(--navy);
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+      }
+      .panduan-tab:hover:not(.active) {
+        color: var(--ink);
+      }
+
+      .panduan-panel {
+        display: none;
+        animation: fadeUp 0.4s ease both;
+      }
+      .panduan-panel.active {
+        display: block;
+      }
+
+      .panduan-bab-title {
+        font-family: var(--display);
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--navy);
+        letter-spacing: -0.6px;
+        margin-bottom: 8px;
+      }
+      .panduan-bab-intro {
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--ink2);
+        margin-bottom: 28px;
+        max-width: 720px;
+      }
+
+      .h3-panduan {
+        font-family: var(--display);
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--ink);
+        letter-spacing: -0.4px;
+        margin-bottom: 12px;
+        margin-top: 36px;
+        padding-top: 28px;
+        border-top: 1px solid var(--border);
+      }
+      .h3-panduan:first-of-type {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+      .h4-panduan {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--teal);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 12px;
+        margin-top: 24px;
+        font-family: var(--mono);
+      }
+      .panduan-p {
+        font-size: 15px;
+        line-height: 1.8;
+        color: var(--ink2);
+        margin-bottom: 14px;
+      }
+      .panduan-p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Callout box */
+      .callout {
+        background: rgba(14, 124, 110, 0.06);
+        border-left: 3px solid var(--teal-mid);
+        border-radius: 0 10px 10px 0;
+        padding: 16px 20px;
+        margin: 20px 0;
+      }
+      .callout.amber {
+        background: rgba(245, 157, 42, 0.07);
+        border-left-color: var(--amber);
+      }
+      .callout.navy {
+        background: rgba(13, 33, 55, 0.05);
+        border-left-color: var(--navy);
+      }
+      .callout p {
+        font-size: 14px;
+        margin-bottom: 0;
+        color: var(--ink2);
+        line-height: 1.7;
+      }
+      .callout strong {
+        color: var(--ink);
+      }
+
+      /* Panduan cards */
+      .p-cards {
+        display: grid;
+        gap: 16px;
+        margin: 20px 0;
+      }
+      .p-cards.cols-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .p-cards.cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .p-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px;
+        transition:
+          box-shadow 0.2s,
+          transform 0.2s;
+      }
+      .p-card:hover {
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+        transform: translateY(-2px);
+      }
+      .p-card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        background: rgba(14, 124, 110, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        margin-bottom: 12px;
+      }
+      .p-card-icon.amber-bg {
+        background: rgba(245, 157, 42, 0.1);
+      }
+      .p-card-icon.navy-bg {
+        background: rgba(13, 33, 55, 0.08);
+      }
+      .p-card-title {
+        font-family: var(--display);
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 8px;
+        letter-spacing: -0.3px;
+      }
+      .p-card-body {
+        font-size: 13.5px;
+        line-height: 1.7;
+        color: var(--ink3);
+      }
+
+      /* Tag list */
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0 18px;
+      }
+      .p-tag {
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        padding: 5px 11px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ink2);
+      }
+      .p-tag.teal {
+        background: rgba(62, 202, 183, 0.1);
+        border-color: rgba(62, 202, 183, 0.25);
+        color: var(--teal);
+      }
+      .p-tag.amber {
+        background: rgba(245, 157, 42, 0.1);
+        border-color: rgba(245, 157, 42, 0.25);
+        color: #b36b00;
+      }
+
+      /* Steps / process list */
+      .p-steps {
+        list-style: none;
+        counter-reset: step;
+        margin: 20px 0;
+      }
+      .p-steps li {
+        counter-increment: step;
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+        align-items: flex-start;
+      }
+      .p-steps li::before {
+        content: counter(step);
+        flex-shrink: 0;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--teal-mid);
+        color: #fff;
+        font-family: var(--mono);
+        font-size: 12px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+      }
+      .p-step-title {
+        font-size: 14.5px;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 4px;
+      }
+      .p-step-desc {
+        font-size: 13.5px;
+        color: var(--ink3);
+        line-height: 1.65;
+      }
+
+      /* Accordion */
+      .accordion {
+        margin: 16px 0;
+      }
+      .acc-item {
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        overflow: hidden;
+        margin-bottom: 8px;
+        background: var(--white);
+      }
+      .acc-trigger {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 20px;
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--ink);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-align: left;
+        font-family: var(--body);
+        transition: background 0.15s;
+      }
+      .acc-trigger:hover {
+        background: var(--cream);
+      }
+      .acc-trigger.open {
+        background: rgba(14, 124, 110, 0.05);
+        color: var(--teal);
+      }
+      .acc-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+        transition: transform 0.25s;
+        color: var(--ink3);
+      }
+      .acc-trigger.open .acc-icon {
+        transform: rotate(180deg);
+        background: rgba(14, 124, 110, 0.12);
+        color: var(--teal);
+      }
+      .acc-body {
+        display: none;
+        padding: 0 20px 20px;
+      }
+      .acc-body p {
+        font-size: 14px;
+        color: var(--ink2);
+        line-height: 1.7;
+        margin-bottom: 12px;
+      }
+      .acc-body p:last-child {
+        margin-bottom: 0;
+      }
+
+      /* Panduan table */
+      .tbl-wrap {
+        overflow-x: auto;
+        margin: 20px 0;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+      }
+      .panduan-section table,
+      .tbl-wrap table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+      }
+      .tbl-wrap thead {
+        background: var(--navy);
+      }
+      .tbl-wrap thead th {
+        padding: 12px 16px;
+        text-align: left;
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+      .tbl-wrap tbody tr {
+        border-bottom: 1px solid var(--border);
+        background: var(--white);
+      }
+      .tbl-wrap tbody tr:last-child {
+        border-bottom: none;
+      }
+      .tbl-wrap tbody tr:hover {
+        background: rgba(14, 124, 110, 0.03);
+      }
+      .tbl-wrap tbody td {
+        padding: 12px 16px;
+        color: var(--ink2);
+        vertical-align: top;
+        line-height: 1.6;
+      }
+      .tbl-wrap tbody td:first-child {
+        font-weight: 600;
+        color: var(--ink);
+      }
+
+      /* Panduan divider */
+      .p-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 40px 0;
+      }
+
+      @media (max-width: 900px) {
+        .stem-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .p-cards.cols-2,
+        .p-cards.cols-3 {
+          grid-template-columns: 1fr;
+        }
+        .panduan-tab {
+          min-width: calc(50% - 4px);
+        }
+      }
     </style>
   </head>
   <body>
@@ -2611,43 +3081,50 @@
         <div class="progress-modules">
           <div
             class="prog-mod"
-            title="Modul 01 — Pendahuluan"
+            title="Tentang Pembelajaran Mendalam"
+            onclick="jumpToSection('tentang')"
+          >
+            <div class="prog-mod-fill" style="width: 0%"></div>
+          </div>
+          <div
+            class="prog-mod"
+            title="Modul Materi"
             onclick="jumpToSection('materi')"
           >
             <div class="prog-mod-fill" style="width: 0%"></div>
           </div>
           <div
             class="prog-mod"
-            title="Modul 02 — Kerangka PM"
-            onclick="jumpToSection('materi')"
-          >
-            <div class="prog-mod-fill" style="width: 0%"></div>
-          </div>
-          <div
-            class="prog-mod"
-            title="Modul 03 — 8 Dimensi"
+            title="8 Dimensi Profil Lulusan"
             onclick="jumpToSection('dimensi')"
           >
             <div class="prog-mod-fill" style="width: 0%"></div>
           </div>
           <div
             class="prog-mod"
-            title="Modul 04 — Pengalaman Belajar"
-            onclick="jumpToSection('alur')"
+            title="Panduan STEM"
+            onclick="jumpToSection('panduan')"
           >
             <div class="prog-mod-fill" style="width: 0%"></div>
           </div>
           <div
             class="prog-mod"
-            title="Modul 05 — Implementasi"
+            title="Aktivitas Interaktif"
             onclick="jumpToSection('aktivitas')"
           >
             <div class="prog-mod-fill" style="width: 0%"></div>
           </div>
           <div
             class="prog-mod"
-            title="Modul 06 — Peran Guru"
-            onclick="jumpToSection('aktivitas')"
+            title="Unit Plan Builder"
+            onclick="jumpToSection('unitplan')"
+          >
+            <div class="prog-mod-fill" style="width: 0%"></div>
+          </div>
+          <div
+            class="prog-mod"
+            title="Media & Dokumen"
+            onclick="jumpToSection('media')"
           >
             <div class="prog-mod-fill" style="width: 0%"></div>
           </div>
@@ -2678,7 +3155,7 @@
       <ul class="nav-links d-desktop" id="desktopNav">
         <li><a href="#tentang">Tentang</a></li>
         <li><a href="#materi">Materi</a></li>
-        <li><a href="#dimensi">Profil Lulusan</a></li>
+        <li><a href="#panduan">Panduan STEM</a></li>
         <li><a href="#unitplan">Unit Plan</a></li>
         <li><a href="#media">Media</a></li>
         <li><a href="#tanya" class="nav-cta">Kirim Pertanyaan →</a></li>
@@ -2698,6 +3175,7 @@
         <li><a href="#tentang" onclick="closeNav()">Tentang Program</a></li>
         <li><a href="#materi" onclick="closeNav()">Materi PM</a></li>
         <li><a href="#dimensi" onclick="closeNav()">8 Dimensi</a></li>
+        <li><a href="#panduan" onclick="closeNav()">Panduan STEM</a></li>
         <li><a href="#aktivitas" onclick="closeNav()">Aktivitas STEM</a></li>
         <li><a href="#unitplan" onclick="closeNav()">Unit Plan Builder</a></li>
         <li><a href="#media" onclick="closeNav()">Media &amp; Dokumen</a></li>
@@ -3450,6 +3928,943 @@
     </section>
 
     <!-- ══════════════════════════════
+     SECTION — PANDUAN STEM (Bab 1–6, Kemendikdasmen 2025)
+══════════════════════════════ -->
+    <section class="section panduan-section" id="panduan">
+      <div class="section-inner">
+        <div class="section-kicker reveal">Panduan Pembelajaran STEM</div>
+        <h2 class="section-heading reveal reveal-delay-1">
+          Ringkasan <span class="italic">Panduan</span> STEM untuk SMA
+        </h2>
+        <p class="section-lead reveal reveal-delay-2">
+          Ringkasan Panduan Pembelajaran STEM (Sains · Teknologi · Enjinering ·
+          Matematika) dari BSKAP, Kemendikdasmen RI 2025 — disusun khusus untuk
+          guru SMA/MA dalam kerangka Pembelajaran Mendalam.
+        </p>
+
+        <!-- STEM letter grid -->
+        <div class="stem-grid reveal">
+          <div class="stem-cell s">
+            <div class="stem-letter">S</div>
+            <div class="stem-name">Sains</div>
+            <div class="stem-desc">
+              Ilmu yang mempelajari fenomena alam — fisika, kimia, dan biologi —
+              melalui praktik saintifik
+            </div>
+          </div>
+          <div class="stem-cell t">
+            <div class="stem-letter">T</div>
+            <div class="stem-name">Teknologi</div>
+            <div class="stem-desc">
+              Inovasi atau alat buatan manusia yang dirancang untuk memenuhi
+              kebutuhan dan memudahkan pekerjaan
+            </div>
+          </div>
+          <div class="stem-cell e">
+            <div class="stem-letter">E</div>
+            <div class="stem-name">Enjinering</div>
+            <div class="stem-desc">
+              Proses merancang solusi masalah nyata dengan prinsip sains,
+              matematika, dan teknologi
+            </div>
+          </div>
+          <div class="stem-cell m">
+            <div class="stem-letter">M</div>
+            <div class="stem-name">Matematika</div>
+            <div class="stem-desc">
+              Ilmu pola, hubungan, dan struktur untuk memecahkan masalah secara
+              logis dan terukur
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab navigation -->
+        <div class="panduan-tabs reveal" role="tablist">
+          <button
+            class="panduan-tab active"
+            onclick="switchPanduan('p1', this)"
+            role="tab"
+          >
+            1 · Pendahuluan
+          </button>
+          <button
+            class="panduan-tab"
+            onclick="switchPanduan('p2', this)"
+            role="tab"
+          >
+            2 · Kerangka
+          </button>
+          <button
+            class="panduan-tab"
+            onclick="switchPanduan('p3', this)"
+            role="tab"
+          >
+            3 · Pemangku Kepentingan
+          </button>
+          <button
+            class="panduan-tab"
+            onclick="switchPanduan('p4', this)"
+            role="tab"
+          >
+            4 · Implementasi
+          </button>
+          <button
+            class="panduan-tab"
+            onclick="switchPanduan('p5', this)"
+            role="tab"
+          >
+            5 · Fokus SMA
+          </button>
+          <button
+            class="panduan-tab"
+            onclick="switchPanduan('p6', this)"
+            role="tab"
+          >
+            6 · Asesmen
+          </button>
+          <button
+            class="panduan-tab"
+            onclick="switchPanduan('p7', this)"
+            role="tab"
+          >
+            Istilah
+          </button>
+        </div>
+
+        <!-- ── PANEL 1: PENDAHULUAN ── -->
+        <div class="panduan-panel active" id="panduan-p1">
+          <div class="panduan-bab-title">Pendahuluan</div>
+          <p class="panduan-bab-intro">
+            STEM mulai berkembang di Amerika Serikat sejak awal 2000-an sebagai
+            respons terhadap menurunnya minat generasi muda terhadap sains dan
+            teknologi — menandai pergeseran dari pembelajaran disiplin terpisah
+            menuju pembelajaran terintegrasi berorientasi pemecahan masalah
+            nyata.
+          </p>
+
+          <h3 class="h3-panduan">Urgensi untuk Indonesia</h3>
+          <div class="callout amber">
+            <p>
+              <strong>Hasil PISA 2022:</strong> Hanya
+              <strong>18% murid</strong> mencapai Level 2+ Matematika,
+              <strong>25% Membaca</strong>, dan <strong>34% Sains</strong> —
+              jauh di bawah rata-rata OECD (69–76%). Proyeksi World Bank
+              menunjukkan kebutuhan jutaan talenta digital pada 2030.
+            </p>
+          </div>
+
+          <div class="p-cards cols-3">
+            <div class="p-card">
+              <div class="p-card-icon">📊</div>
+              <div class="p-card-title">Defisit HOTS</div>
+              <div class="p-card-body">
+                Menutup kekurangan keterampilan berpikir tingkat tinggi yang
+                tampak pada PISA 2022
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon amber-bg">🏭</div>
+              <div class="p-card-title">Relevansi Dunia Kerja</div>
+              <div class="p-card-body">
+                Menyiapkan talenta sains, teknologi, dan kewirausahaan berbasis
+                inovasi — bukan hanya ranah digital
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon navy-bg">🌱</div>
+              <div class="p-card-title">Indonesia Emas 2045</div>
+              <div class="p-card-body">
+                Mendukung target Indonesia menjadi ekonomi terbesar ke-4 dunia
+                melalui SDM berkualitas dan adaptif
+              </div>
+            </div>
+          </div>
+
+          <h3 class="h3-panduan">
+            Karakteristik Pembelajaran STEM (Bybee, 2013)
+          </h3>
+          <ol class="p-steps">
+            <li>
+              <div>
+                <div class="p-step-title">Penyelesaian Masalah</div>
+                <div class="p-step-desc">
+                  Menghadirkan persoalan kontekstual nyata — dari isu lingkungan
+                  sekitar hingga masalah global — untuk membangun kepedulian dan
+                  rasa ingin tahu. Masalah tidak harus besar; yang penting
+                  bermakna.
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <div class="p-step-title">Praktik Saintifik dan Enjinering</div>
+                <div class="p-step-desc">
+                  Keterampilan iteratif: Memahami → Mengidentifikasi Masalah →
+                  Bertukar Pikiran → Mendesain → Membuat → Menguji → Mendesain
+                  Ulang → Mengomunikasikan.
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <div class="p-step-title">Integrasi Lintas Disiplin Ilmu</div>
+                <div class="p-step-desc">
+                  Dari <em>multidisipliner</em> (paralel),
+                  <em>interdisipliner</em> (konsep dipadukan), hingga
+                  <em>transdisipliner</em> (sekat disiplin larut dalam proses
+                  pemecahan masalah).
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          <h3 class="h3-panduan">Perspektif Implementasi</h3>
+          <div class="accordion">
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pi1">
+                <span>1 · STEM sebagai Kerangka Berpikir Lintas Mapel</span>
+                <span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pi1">
+                <p>
+                  STEM dijadikan pendekatan lintas mata pelajaran oleh semua
+                  pendidik, termasuk bidang non-STEM. Tidak bergantung pada
+                  fasilitas canggih — cocok untuk berbagai kondisi satuan
+                  pendidikan.
+                </p>
+                <div class="tag-list">
+                  <span class="p-tag teal">Semua mapel</span>
+                  <span class="p-tag">Adaptif</span>
+                  <span class="p-tag">STEAM / STREAM / STEAMMI</span>
+                </div>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pi2">
+                <span>2 · STEM sebagai Pendekatan Terpadu</span>
+                <span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pi2">
+                <p>
+                  Memadukan keempat disiplin STEM dalam satu unit berbasis
+                  proyek. Bentuk <strong>Tertanam/Embedded</strong> (satu mapel
+                  utama menyisipkan disiplin lain) dan
+                  <strong>Terpadu/Integrated</strong> (beberapa disiplin
+                  digabung dalam satu proyek).
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pi3">
+                <span>3 · STEM sebagai Mata Pelajaran</span>
+                <span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pi3">
+                <p>
+                  STEM sebagai mata pelajaran khusus yang berdiri sendiri.
+                  Memberikan kedalaman materi dengan jalur jelas menuju
+                  perguruan tinggi teknik/sains. Tepat untuk satuan pendidikan
+                  unggulan.
+                </p>
+                <div class="tag-list">
+                  <span class="p-tag amber">SMA/SMK Unggulan</span>
+                  <span class="p-tag">Lab khusus</span>
+                  <span class="p-tag">Pipeline ke PT teknik</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PANEL 2: KERANGKA ── -->
+        <div class="panduan-panel" id="panduan-p2">
+          <div class="panduan-bab-title">Kerangka Pembelajaran STEM</div>
+          <p class="panduan-bab-intro">
+            Empat pilar utama: praktik pedagogis, lingkungan belajar, kemitraan,
+            dan pemanfaatan digital.
+          </p>
+
+          <h3 class="h3-panduan">A · Model Pembelajaran</h3>
+          <div class="accordion">
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pm1">
+                <span>Pembelajaran Berbasis Proyek Lucas (PjBL)</span>
+                <span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pm1">
+                <ol class="p-steps">
+                  <li>
+                    <div>
+                      <div class="p-step-title">Pertanyaan Esensial</div>
+                      <div class="p-step-desc">
+                        Memulai dengan pertanyaan terbuka yang relevan dengan
+                        masalah nyata
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <div class="p-step-title">Merancang Rencana</div>
+                      <div class="p-step-desc">
+                        Mengumpulkan informasi, mempelajari konsep, membayangkan
+                        solusi
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <div class="p-step-title">Membuat Jadwal</div>
+                      <div class="p-step-desc">
+                        Menyusun rencana detail dan tenggat waktu yang jelas
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <div class="p-step-title">Memantau Perkembangan</div>
+                      <div class="p-step-desc">
+                        Memfasilitasi, memantau, dan membimbing kolaborasi murid
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      <div class="p-step-title">Menilai &amp; Mengevaluasi</div>
+                      <div class="p-step-desc">
+                        Murid menguji produk, pendidik menilai, lalu refleksi
+                        bersama
+                      </div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pm2">
+                <span>PjBL STEM Laboy-Rush</span>
+                <span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pm2">
+                <p>
+                  Tahapan:
+                  <strong
+                    >Merefleksi → Meneliti → Mengeksplorasi &amp; Menemukan →
+                    Mengaplikasikan → Mengomunikasikan</strong
+                  >. Setiap tahap menekankan iterasi purwarupa hingga solusi
+                  optimal.
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pm3">
+                <span>Model Siklus Pembelajaran 5E (BSCS)</span>
+                <span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pm3">
+                <div class="tbl-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Tahap</th>
+                        <th>Aktivitas STEM</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Engagement</td>
+                        <td>
+                          Memahami masalah nyata, merumuskan pertanyaan
+                          enjinering
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Exploration</td>
+                        <td>
+                          Eksplorasi ide, percobaan sederhana, rancangan awal
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Explanation</td>
+                        <td>Hubungkan temuan dengan konsep ilmiah</td>
+                      </tr>
+                      <tr>
+                        <td>Elaboration</td>
+                        <td>Buat purwarupa, uji, sempurnakan solusi</td>
+                      </tr>
+                      <tr>
+                        <td>Evaluation</td>
+                        <td>Presentasikan rancangan, evaluasi, dan refleksi</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="h3-panduan">B · Lingkungan Belajar</h3>
+          <div class="p-cards cols-2">
+            <div class="p-card">
+              <div class="p-card-icon">🏛️</div>
+              <div class="p-card-title">Ruang Fisik Fleksibel</div>
+              <div class="p-card-body">
+                Kelas fleksibel, laboratorium, makerspace, dan ruang luar untuk
+                kerja tim dan eksperimen lintas disiplin
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon">💻</div>
+              <div class="p-card-title">Ruang Virtual Terintegrasi</div>
+              <div class="p-card-body">
+                Platform digital, simulasi interaktif, AR/VR, dan LMS yang
+                memperluas pengalaman belajar lintas waktu dan tempat
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon amber-bg">🔬</div>
+              <div class="p-card-title">Budaya Inkuiri</div>
+              <div class="p-card-body">
+                Rasa ingin tahu, ketangguhan, kreativitas, dan pemikiran
+                reflektif diinternalisasi melalui pengalaman terstruktur
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon navy-bg">♿</div>
+              <div class="p-card-title">Inklusivitas &amp; Aksesibilitas</div>
+              <div class="p-card-body">
+                Pembelajaran berdiferensiasi, strategi aksesibilitas, dan
+                teknologi bantu untuk semua murid termasuk berkebutuhan khusus
+              </div>
+            </div>
+          </div>
+
+          <h3 class="h3-panduan">C · Pemanfaatan Digital</h3>
+          <p class="panduan-p">
+            Teknologi digital berperan pada tiga tahap:
+            <strong>perencanaan</strong>, <strong>pelaksanaan</strong>, dan
+            <strong>asesmen</strong>.
+          </p>
+          <div class="tag-list">
+            <span class="p-tag teal">Simulasi &amp; Lab Virtual</span>
+            <span class="p-tag teal">AR / VR</span>
+            <span class="p-tag">Platform LMS</span>
+            <span class="p-tag">Kecerdasan Artifisial</span>
+            <span class="p-tag">Spreadsheet</span>
+            <span class="p-tag amber">PhET Simulations</span>
+          </div>
+        </div>
+
+        <!-- ── PANEL 3: PEMANGKU KEPENTINGAN ── -->
+        <div class="panduan-panel" id="panduan-p3">
+          <div class="panduan-bab-title">Peran Pemangku Kepentingan</div>
+          <p class="panduan-bab-intro">
+            Implementasi STEM memerlukan perluasan ruang belajar melampaui kelas
+            formal — rumah, komunitas, industri, dan ruang digital dimobilisasi
+            menjadi laboratorium autentik.
+          </p>
+          <div class="p-cards cols-2">
+            <div class="p-card">
+              <div class="p-card-icon">🏛️</div>
+              <div class="p-card-title">Dinas Pendidikan</div>
+              <div class="p-card-body">
+                Menyusun kebijakan STEM; menyediakan anggaran, infrastruktur,
+                dan pelatihan pendidik
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon amber-bg">🔍</div>
+              <div class="p-card-title">Pengawas Satuan Pendidikan</div>
+              <div class="p-card-body">
+                Mengawasi pelaksanaan, mendorong asesmen autentik, dan
+                mengembangkan PLC
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon navy-bg">🎓</div>
+              <div class="p-card-title">Kepala Satuan Pendidikan</div>
+              <div class="p-card-body">
+                Mendorong STEM dalam KSP; mengatur waktu &amp; sumber daya;
+                menjalin kemitraan industri/PT
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon">👩‍🏫</div>
+              <div class="p-card-title">Pendidik</div>
+              <div class="p-card-body">
+                Membimbing murid menghubungkan STEM dengan masalah nyata;
+                merencanakan eksplorasi &amp; penilaian autentik
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon amber-bg">👨‍👩‍👧</div>
+              <div class="p-card-title">Orang Tua / Wali</div>
+              <div class="p-card-body">
+                Dukungan relevan tanpa intervensi langsung; berbagi pengalaman
+                atau profesi sebagai praktisi ahli
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PANEL 4: IMPLEMENTASI ── -->
+        <div class="panduan-panel" id="panduan-p4">
+          <div class="panduan-bab-title">Implementasi Pembelajaran STEM</div>
+          <p class="panduan-bab-intro">
+            STEM dapat dilaksanakan secara <em>mudah</em> (kontekstual, sesuai
+            taraf perkembangan) dan <em>murah</em> (alat &amp; bahan sederhana
+            atau bahan bekas yang aman).
+          </p>
+
+          <h3 class="h3-panduan">A · Intrakurikuler</h3>
+          <div class="p-cards cols-3">
+            <div class="p-card">
+              <div class="p-card-icon">📋</div>
+              <div class="p-card-title">Perencanaan</div>
+              <div class="p-card-body">
+                Rancangan kontekstual berbasis tantangan, selaras Capaian
+                Pembelajaran (CP)
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon amber-bg">⚗️</div>
+              <div class="p-card-title">Pelaksanaan</div>
+              <div class="p-card-body">
+                Pengalaman belajar aktif: eksplorasi masalah, proses ilmiah dan
+                enjinering, kolaborasi
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon navy-bg">📊</div>
+              <div class="p-card-title">Asesmen</div>
+              <div class="p-card-body">
+                Mengukur kompetensi holistik melalui berbagai teknik proses
+                &amp; hasil
+              </div>
+            </div>
+          </div>
+
+          <h4 class="h4-panduan">Langkah Merencanakan Pembelajaran STEM</h4>
+          <ol class="p-steps">
+            <li>
+              <div>
+                <div class="p-step-title">Menentukan Topik Proyek</div>
+                <div class="p-step-desc">
+                  Identifikasi masalah/potensi di lingkungan sekitar — tidak
+                  harus rumit
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <div class="p-step-title">
+                  Menganalisis CP &amp; Integrasi STEM
+                </div>
+                <div class="p-step-desc">
+                  Tentukan kompetensi, identifikasi keterlibatan S-T-E-M terpadu
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <div class="p-step-title">
+                  Strategi Praktik Saintifik &amp; Enjinering
+                </div>
+                <div class="p-step-desc">
+                  Tentukan langkah dari identifikasi masalah, desain, pembuatan,
+                  hingga komunikasi
+                </div>
+              </div>
+            </li>
+            <li>
+              <div>
+                <div class="p-step-title">
+                  Menyusun Perencanaan &amp; Asesmen
+                </div>
+                <div class="p-step-desc">
+                  Kriteria keberhasilan, alat ukur formatif &amp; sumatif,
+                  rencana tindak lanjut
+                </div>
+              </div>
+            </li>
+          </ol>
+
+          <div class="callout amber">
+            <p>
+              <strong>Kriteria vs. Batasan:</strong> <em>Kriteria</em> adalah
+              standar terukur yang harus dicapai. <em>Batasan</em> adalah
+              aturan/keterbatasan sumber daya yang harus dipatuhi — menstimulasi
+              kreativitas sekaligus meniru kondisi nyata dunia teknik.
+            </p>
+          </div>
+
+          <h3 class="h3-panduan">B · Kokurikuler — P2PL</h3>
+          <div class="callout navy">
+            <p>
+              <strong>Praktik Baik SMA (SMAN Banua Kalsel):</strong> Proyek
+              "Energi Terbarukan" — murid membangun mini turbin angin dari bahan
+              sederhana, memadukan IPA (fisika energi angin), Matematika
+              (analisis data produksi), Teknologi (sensor pemantau), dan
+              Enjinering (desain turbin).
+            </p>
+          </div>
+
+          <h3 class="h3-panduan">C · Ekstrakurikuler</h3>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ekstrakurikuler</th>
+                  <th>Kaitan STEM</th>
+                  <th>Bentuk Kegiatan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Robotika</td>
+                  <td>Teknologi &amp; Enjinering</td>
+                  <td>
+                    Desain, pemrograman, dan kompetisi robot (mekatronika)
+                  </td>
+                </tr>
+                <tr>
+                  <td>Karya Ilmiah Remaja</td>
+                  <td>Sains &amp; Matematika</td>
+                  <td>
+                    Penelitian inkuiri, presentasi ilmiah, kompetisi sains
+                  </td>
+                </tr>
+                <tr>
+                  <td>Coding / Pemrograman</td>
+                  <td>Teknologi</td>
+                  <td>
+                    Pengembangan aplikasi, web, atau game berbasis masalah
+                    komunitas
+                  </td>
+                </tr>
+                <tr>
+                  <td>Pecinta Alam</td>
+                  <td>Sains &amp; Enjinering</td>
+                  <td>Pemantauan lingkungan, pengukuran kualitas air/udara</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── PANEL 5: FOKUS SMA ── -->
+        <div class="panduan-panel" id="panduan-p5">
+          <div class="panduan-bab-title">Fokus Implementasi STEM di SMA</div>
+          <p class="panduan-bab-intro">
+            Jenjang SMA/MA (Fase E &amp; F) berfokus pada proyek rekayasa
+            kompleks, pemodelan matematis (distribusi normal, statistika
+            inferensial), dan kemitraan eksternal nyata.
+          </p>
+
+          <div class="callout amber">
+            <p>
+              <strong>Karakteristik Khas SMA:</strong> Murid menganalisis data
+              kuantitatif, menggunakan distribusi normal untuk proyeksi,
+              berkolaborasi dengan lembaga eksternal (BMKG, UNESCO, Perguruan
+              Tinggi), dan menghasilkan kampanye/purwarupa yang dipamerkan.
+            </p>
+          </div>
+
+          <h3 class="h3-panduan">
+            Contoh Proyek: "Dampak Perubahan Iklim terhadap Kelangsungan Hidup
+            Spesies"
+          </h3>
+          <p class="panduan-p">
+            <strong
+              >Biologi &amp; Matematika · Kelas X/XI · Fase E · 6
+              Pertemuan</strong
+            >
+          </p>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Pert.</th>
+                  <th>Topik</th>
+                  <th>Aktivitas Utama</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Studi Kasus Kepunahan</td>
+                  <td>
+                    Analisis video kepunahan Bramble Cay Melomys; rumuskan
+                    pertanyaan investigatif
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Analisis Data NASA</td>
+                  <td>
+                    Eksplorasi suhu via NASA Worldview; hitung rata-rata &amp;
+                    standar deviasi; kaitkan populasi Badak Jawa
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Kemitraan BMKG &amp; UNESCO</td>
+                  <td>
+                    Diskusi daring dengan BMKG dan sekolah jejaring UNESCO
+                    ASPNet
+                  </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Pemodelan &amp; Desain</td>
+                  <td>
+                    Hitung peluang kepunahan (Z-score); rancang purwarupa
+                    habitat adaptif
+                  </td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Bangun &amp; Uji Purwarupa</td>
+                  <td>
+                    Bangun miniatur habitat (fisik/digital); uji berulang;
+                    analisis data
+                  </td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>Kampanye &amp; Presentasi</td>
+                  <td>
+                    Media kampanye pencegahan kepunahan; pameran
+                    <em>window shopping</em>; refleksi
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4 class="h4-panduan">Integrasi Komponen STEM</h4>
+          <div class="stem-grid">
+            <div class="stem-cell s">
+              <div class="stem-letter">S</div>
+              <div class="stem-name">Sains</div>
+              <div class="stem-desc">
+                Seleksi alam, adaptasi, evolusi, dan dampak perubahan iklim pada
+                ekosistem
+              </div>
+            </div>
+            <div class="stem-cell t">
+              <div class="stem-letter">T</div>
+              <div class="stem-name">Teknologi</div>
+              <div class="stem-desc">
+                NASA Worldview, aplikasi data, Canva/PowerPoint untuk media
+                kampanye
+              </div>
+            </div>
+            <div class="stem-cell e">
+              <div class="stem-letter">E</div>
+              <div class="stem-name">Enjinering</div>
+              <div class="stem-desc">
+                Merancang &amp; membangun purwarupa habitat adaptif simulasi
+                iklim mikro
+              </div>
+            </div>
+            <div class="stem-cell m">
+              <div class="stem-letter">M</div>
+              <div class="stem-name">Matematika</div>
+              <div class="stem-desc">
+                Distribusi normal, Z-score, standar deviasi, perhitungan peluang
+                proyeksi
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PANEL 6: ASESMEN ── -->
+        <div class="panduan-panel" id="panduan-p6">
+          <div class="panduan-bab-title">Asesmen Pembelajaran STEM</div>
+          <p class="panduan-bab-intro">
+            Asesmen STEM menggunakan variasi teknik sesuai tujuan pembelajaran,
+            mencakup ranah kognitif, afektif, dan psikomotorik — menekankan
+            <em>proses dan produk</em> dengan kriteria yang jelas.
+          </p>
+
+          <div class="p-cards cols-3">
+            <div class="p-card">
+              <div class="p-card-icon">📝</div>
+              <div class="p-card-title">Awal (Diagnostik)</div>
+              <div class="p-card-body">
+                Kuis pengetahuan awal (Quizizz, Kahoot, Google Forms) untuk
+                memetakan kesiapan &amp; pengelompokan heterogen
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon amber-bg">🔄</div>
+              <div class="p-card-title">Proses (Formatif)</div>
+              <div class="p-card-body">
+                Lembar kerja, observasi praktik, portofolio digital, catatan
+                harian, laporan kemajuan proyek
+              </div>
+            </div>
+            <div class="p-card">
+              <div class="p-card-icon navy-bg">🏆</div>
+              <div class="p-card-title">Akhir (Sumatif)</div>
+              <div class="p-card-body">
+                Unjuk kerja: presentasi purwarupa, pameran karya, laporan —
+                rubrik berbasis dimensi profil lulusan
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <p>
+              <strong>Kategori Nilai:</strong> Mahir (84–100) → Cakap (69–83) →
+              Berkembang (54–68) → Perlu Bimbingan (0–53). Murid dianggap
+              mencapai tujuan bila menunjukkan perilaku skor 3 pada setiap
+              indikator (kategori Cakap).
+            </p>
+          </div>
+
+          <h4 class="h4-panduan">Teknik Asesmen per Aktivitas STEM</h4>
+          <div class="tbl-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Aktivitas</th>
+                  <th>Teknik</th>
+                  <th>Bentuk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Identifikasi Masalah</td>
+                  <td>Observasi diskusi, lembar tanya jawab</td>
+                  <td>Formatif</td>
+                </tr>
+                <tr>
+                  <td>Desain Solusi</td>
+                  <td>Penilaian rancangan, presentasi peer</td>
+                  <td>Formatif</td>
+                </tr>
+                <tr>
+                  <td>Pembuatan Purwarupa</td>
+                  <td>Checklist kesesuaian kriteria</td>
+                  <td>Formatif</td>
+                </tr>
+                <tr>
+                  <td>Komunikasi/Presentasi</td>
+                  <td>Rubrik presentasi</td>
+                  <td>Sumatif</td>
+                </tr>
+                <tr>
+                  <td>Laporan Proyek</td>
+                  <td>Rubrik laporan (data, analisis, refleksi)</td>
+                  <td>Sumatif</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── PANEL 7: ISTILAH ── -->
+        <div class="panduan-panel" id="panduan-p7">
+          <div class="panduan-bab-title">Daftar Istilah Kunci</div>
+          <p class="panduan-bab-intro">
+            Glosarium istilah penting dalam Panduan Pembelajaran STEM.
+          </p>
+          <div class="accordion">
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pg1">
+                <span>Pembelajaran Mendalam</span
+                ><span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pg1">
+                <p>
+                  Pendekatan pembelajaran yang berkesadaran, bermakna, dan
+                  menggembirakan; menggeser fokus dari transfer pengetahuan ke
+                  pengalaman belajar konstruktivis yang mendorong delapan
+                  dimensi profil lulusan.
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pg2">
+                <span>Praktik Saintifik dan Enjinering</span
+                ><span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pg2">
+                <p>
+                  Serangkaian keterampilan dan proses yang digunakan ilmuwan
+                  serta insinyur untuk memahami fenomena alam dan menciptakan
+                  solusi teknologi — dilaksanakan secara iteratif hingga solusi
+                  optimal.
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pg3">
+                <span>Purwarupa (Prototype)</span
+                ><span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pg3">
+                <p>
+                  Model atau simulasi awal dari solusi yang dirancang, dibuat
+                  untuk diuji efektivitasnya sebelum diterapkan penuh. Dapat
+                  berupa fisik (miniatur) atau digital (simulasi).
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pg4">
+                <span>Universal Design for Learning (UDL)</span
+                ><span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pg4">
+                <p>
+                  Kerangka desain pembelajaran inklusif yang menyediakan
+                  berbagai cara mengakses materi, mengomunikasikan hasil, dan
+                  terlibat — bermakna bagi semua murid termasuk berkebutuhan
+                  khusus.
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pg5">
+                <span>Transdisipliner</span><span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pg5">
+                <p>
+                  Pendekatan tertinggi integrasi STEM: masalah nyata dipecahkan
+                  tanpa sekat disiplin, identitas mata pelajaran larut dalam
+                  proses pemecahan masalah yang holistik dan kontekstual.
+                </p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" data-acc="pg6">
+                <span>Distribusi Normal &amp; Z-Score (SMA)</span
+                ><span class="acc-icon">▾</span>
+              </button>
+              <div class="acc-body" id="pg6">
+                <p>
+                  Alat matematika untuk menghitung peluang dalam proyeksi data.
+                  Di SMA digunakan untuk menganalisis perubahan suhu dalam
+                  proyeksi kepunahan spesies: <strong>Z = (X − μ) / σ</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout navy" style="margin-top: 28px">
+            <p>
+              <strong>Sumber:</strong> Panduan Pembelajaran STEM untuk Guru
+              PAUD, SD, SMP, SMA, SMK, dan SLB. Pusat Kurikulum dan
+              Pembelajaran, BSKAP, Kemendikdasmen RI, 2025. 298 halaman.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════
      SECTION — AKTIVITAS H5P
 ══════════════════════════════ -->
     <section class="section activity-section" id="aktivitas">
@@ -3954,6 +5369,24 @@
             </div>
 
             <div class="upf-body">
+              <!-- Roadmap 1.3 — autosaved draft restore notice -->
+              <div
+                id="upfRestoreNote"
+                style="
+                  display: none;
+                  margin-bottom: 18px;
+                  padding: 10px 14px;
+                  background: rgba(245, 157, 42, 0.1);
+                  border: 1px solid rgba(245, 157, 42, 0.3);
+                  border-radius: 8px;
+                  font-size: 12.5px;
+                  color: #b36b00;
+                "
+              >
+                💾 Draft tersimpan otomatis telah dipulihkan. Lanjutkan dari
+                tempat Anda berhenti.
+              </div>
+
               <!-- Step 1: Identifikasi -->
               <div class="upf-step active" id="upf-step-1">
                 <div class="upf-step-title">Langkah 1 — Identifikasi</div>
@@ -4614,13 +6047,34 @@
     <script>
       // ═══════════════════════════════════════════════
       //  SekolahMania — scripts.js (Aloha-style jQuery)
-      //  Cache-bust: ?2
+      //  Cache-bust: ?3  (Panduan STEM merge + Roadmap optimizations)
       // ═══════════════════════════════════════════════
 
       // ── State ──────────────────────────────────────
       var currentRating = 0;
       var upfCurrentStep = 1;
       var upfTotalSteps = 4;
+
+      // ── Roadmap 1.3 — Unit Plan autosave (localStorage) ──
+      var UPF_STORAGE_KEY = "sekolahmania_rpm_draft_v1";
+      var UPF_FIELDS = [
+        "upf-mapel",
+        "upf-kelas",
+        "upf-waktu",
+        "upf-profil",
+        "upf-tujuan",
+        "upf-topik",
+        "upf-pedagogi",
+        "upf-lingkungan",
+        "upf-mitra",
+        "upf-memahami",
+        "upf-mengaplikasi",
+        "upf-merefleksi",
+        "upf-as-awal",
+        "upf-as-proses",
+        "upf-as-akhir",
+        "upf-catatan",
+      ];
 
       // ── Convex HTTP Actions config ─────────────────
       // LOCAL DEV:  "http://127.0.0.1:3211"
@@ -4663,6 +6117,14 @@
         $(btn).addClass("active");
         $(".media-panel").removeClass("active");
         $("#tab-" + panel).addClass("active");
+      }
+
+      // ── Panduan STEM tab switcher (Bab 1–6 + Istilah) ──
+      function switchPanduan(panel, btn) {
+        $(".panduan-tab").removeClass("active");
+        $(btn).addClass("active");
+        $(".panduan-panel").removeClass("active");
+        $("#panduan-" + panel).addClass("active");
       }
 
       // ── Unit Plan Builder — step navigation ──────
@@ -4753,15 +6215,107 @@
             console.error("Unit plan network error:", err);
           });
 
-        // Generate plain-text preview for download
-        var txt = generateUnitPlanText(data);
-        downloadFile(
-          "RPM-" + (data.topik || data.mapel).replace(/\s+/g, "-") + ".txt",
-          txt,
-        );
+        // Roadmap 2.1 — Professional PDF export (html2pdf.js)
+        // Falls back to plain .txt if the library failed to load.
+        if (typeof html2pdf !== "undefined") {
+          generateUnitPlanPDF(data);
+        } else {
+          var txt = generateUnitPlanText(data);
+          downloadFile(
+            "RPM-" + (data.topik || data.mapel).replace(/\s+/g, "-") + ".txt",
+            txt,
+          );
+        }
+
+        // Roadmap 1.3 — clear autosaved draft only after successful submit
+        try {
+          localStorage.removeItem(UPF_STORAGE_KEY);
+        } catch (e) {
+          /* localStorage unavailable — ignore */
+        }
 
         alert(
-          "✅ Unit Plan berhasil disimpan! File teks telah diunduh. Salin ke Google Docs atau Word untuk format lengkap.",
+          "✅ Unit Plan berhasil disimpan! Dokumen RPM telah diunduh dan draft otomatis dibersihkan.",
+        );
+      }
+
+      // ── Roadmap 2.1 — Render styled RPM and export as PDF ──
+      function generateUnitPlanPDF(d) {
+        var dimensiList = d.dimensi.length ? d.dimensi.join(", ") : "-";
+        var esc = function (s) {
+          return $("<span>")
+            .text(s || "-")
+            .html();
+        };
+        var html =
+          '<div style="font-family: Figtree, Arial, sans-serif; color:#0d2137; padding:32px; max-width:780px;">' +
+          '<div style="border-bottom:3px solid #0e7c6e; padding-bottom:16px; margin-bottom:24px;">' +
+          '<h1 style="font-size:22px; margin:0 0 4px; color:#0d2137;">Rencana Pelaksanaan Pembelajaran Mendalam</h1>' +
+          '<p style="font-size:12px; color:#5c7a8a; margin:0;">SekolahMania.com · ' +
+          new Date().toLocaleDateString("id-ID") +
+          " · Pembelajaran STEM</p>" +
+          "</div>" +
+          '<table style="width:100%; border-collapse:collapse; font-size:13px; margin-bottom:20px;">' +
+          rowPDF("Mata Pelajaran", esc(d.mapel)) +
+          rowPDF("Kelas / Fase", esc(d.kelas)) +
+          rowPDF("Alokasi Waktu", esc(d.waktu)) +
+          rowPDF("Dimensi Profil Lulusan", esc(dimensiList)) +
+          "</table>" +
+          sectionPDF("Identifikasi — Profil Peserta Didik", esc(d.profil)) +
+          sectionPDF("Tujuan Pembelajaran", esc(d.tujuan)) +
+          sectionPDF("Topik Pembelajaran", esc(d.topik)) +
+          sectionPDF("Praktik Pedagogis", esc(d.pedagogi)) +
+          sectionPDF("Lingkungan Pembelajaran", esc(d.lingkungan)) +
+          sectionPDF("Kemitraan", esc(d.mitra)) +
+          '<h3 style="font-size:14px; color:#0e7c6e; margin:24px 0 8px;">Pengalaman Belajar</h3>' +
+          sectionPDF("1. Memahami (Berkesadaran, Bermakna)", esc(d.memahami)) +
+          sectionPDF(
+            "2. Mengaplikasi (Bermakna, Menggembirakan)",
+            esc(d.mengaplikasi),
+          ) +
+          sectionPDF(
+            "3. Merefleksi (Berkesadaran, Regulasi Diri)",
+            esc(d.merefleksi),
+          ) +
+          '<h3 style="font-size:14px; color:#0e7c6e; margin:24px 0 8px;">Asesmen</h3>' +
+          sectionPDF("Awal (Diagnostik)", esc(d.as_awal)) +
+          sectionPDF("Proses (Formatif)", esc(d.as_proses)) +
+          sectionPDF("Akhir (Sumatif)", esc(d.as_akhir)) +
+          sectionPDF("Catatan Tambahan", esc(d.catatan)) +
+          '<p style="font-size:11px; color:#8fa4b0; margin-top:28px; border-top:1px solid #d8e4e0; padding-top:12px;">Dibuat di SekolahMania.com — Platform Pelatihan Guru STEM · Pembelajaran Mendalam</p>' +
+          "</div>";
+
+        var holder = document.createElement("div");
+        holder.innerHTML = html;
+        html2pdf()
+          .set({
+            margin: 10,
+            filename:
+              "RPM-" + (d.topik || d.mapel).replace(/\s+/g, "-") + ".pdf",
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          })
+          .from(holder)
+          .save();
+      }
+
+      function rowPDF(label, val) {
+        return (
+          '<tr><td style="padding:7px 10px; background:#f2ede4; font-weight:600; width:38%; border:1px solid #d8e4e0;">' +
+          label +
+          '</td><td style="padding:7px 10px; border:1px solid #d8e4e0;">' +
+          val +
+          "</td></tr>"
+        );
+      }
+      function sectionPDF(label, val) {
+        return (
+          '<div style="margin-bottom:12px;"><div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:#5c7a8a; margin-bottom:3px;">' +
+          label +
+          '</div><div style="font-size:13px; line-height:1.6; color:#2e4a5f;">' +
+          val +
+          "</div></div>"
         );
       }
 
@@ -4838,6 +6392,67 @@
             .toggleClass("checked", this.checked);
         },
       );
+
+      // ── Panduan STEM accordion (slide toggle) ──────
+      $(document).on("click", ".acc-trigger", function () {
+        var id = $(this).data("acc");
+        var $body = $("#" + id);
+        var isOpen = $(this).hasClass("open");
+        // close all items within the same accordion container
+        $(this).closest(".accordion").find(".acc-trigger").removeClass("open");
+        $(this).closest(".accordion").find(".acc-body").slideUp(200);
+        if (!isOpen) {
+          $(this).addClass("open");
+          $body.slideDown(220);
+        }
+      });
+
+      // ── Roadmap 1.3 — Unit Plan autosave to localStorage ──
+      function upfSaveDraft() {
+        try {
+          var draft = {};
+          UPF_FIELDS.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el) draft[id] = el.value;
+          });
+          draft.dimensi = [];
+          $("#dimensiChecks input:checked").each(function () {
+            draft.dimensi.push($(this).val());
+          });
+          localStorage.setItem(UPF_STORAGE_KEY, JSON.stringify(draft));
+        } catch (e) {
+          /* localStorage unavailable (private mode / quota) — silently skip */
+        }
+      }
+
+      function upfRestoreDraft() {
+        try {
+          var raw = localStorage.getItem(UPF_STORAGE_KEY);
+          if (!raw) return false;
+          var draft = JSON.parse(raw);
+          var hasContent = false;
+          UPF_FIELDS.forEach(function (id) {
+            var el = document.getElementById(id);
+            if (el && draft[id]) {
+              el.value = draft[id];
+              if (draft[id].trim()) hasContent = true;
+            }
+          });
+          if (Array.isArray(draft.dimensi)) {
+            draft.dimensi.forEach(function (val) {
+              var $cb = $('#dimensiChecks input[value="' + val + '"]');
+              if ($cb.length) {
+                $cb.prop("checked", true);
+                $cb.closest(".dimensi-check-item").addClass("checked");
+                hasContent = true;
+              }
+            });
+          }
+          return hasContent;
+        } catch (e) {
+          return false;
+        }
+      }
 
       // ── Q&A Submission ────────────────────────────
       function submitQA() {
@@ -4995,8 +6610,11 @@
             $progressStrip.hide();
           }
 
-          // Fill each progress segment proportionally across 6 modules
-          var segPct = Math.min(100, pct * 6);
+          // Fill each progress segment proportionally across 7 sections.
+          // NOTE (Roadmap 2.2): this is a scroll-depth proxy. To make this an
+          // authentic learning metric, hook H5P xAPI "completed"/"passed"
+          // statements and drive segment fill from those milestones instead.
+          var segPct = Math.min(100, pct * 7);
           $progressDots.each(function (i) {
             var fill = Math.min(100, Math.max(0, segPct - i * 100));
             $(this).css("width", fill + "%");
@@ -5044,6 +6662,40 @@
           );
           var pisaEl = document.querySelector(".pisa-bars");
           if (pisaEl) pisaObs.observe(pisaEl);
+        }
+
+        // ── Roadmap 1.2 — enforce lazy-loading on all media ──
+        // All current visuals are pure CSS, but any <img>/<iframe> added later
+        // (H5P embeds, YouTube, speaker photos) get loading="lazy" automatically.
+        document
+          .querySelectorAll("img:not([loading]), iframe:not([loading])")
+          .forEach(function (el) {
+            el.setAttribute("loading", "lazy");
+          });
+
+        // ── Roadmap 1.3 — Unit Plan autosave + restore ──
+        var $upfInputs = $(
+          "#upf-mapel, #upf-kelas, #upf-waktu, #upf-profil, #upf-tujuan, " +
+            "#upf-topik, #upf-pedagogi, #upf-lingkungan, #upf-mitra, " +
+            "#upf-memahami, #upf-mengaplikasi, #upf-merefleksi, " +
+            "#upf-as-awal, #upf-as-proses, #upf-as-akhir, #upf-catatan",
+        );
+        // Autosave on typing / change (debounced lightly via timeout)
+        var saveTimer = null;
+        function scheduleSave() {
+          clearTimeout(saveTimer);
+          saveTimer = setTimeout(upfSaveDraft, 400);
+        }
+        $upfInputs.on("keyup change", scheduleSave);
+        $(document).on(
+          "change",
+          "#dimensiChecks input[type=checkbox]",
+          scheduleSave,
+        );
+        // Restore any saved draft on load
+        if (upfRestoreDraft()) {
+          var $note = $("#upfRestoreNote");
+          if ($note.length) $note.fadeIn(300);
         }
 
         // ── Plausible-style analytics proxy (Aloha takeaway #3) ──
