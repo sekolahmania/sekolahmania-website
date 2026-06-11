@@ -5,6 +5,9 @@
 > Founder 1: **Ayuk Ratna Puspaningsih** — Guru Biologi, SMA Negeri Bali Mandara.
 > Founder 2: **I Gede Suta Pinatih** — Guru Fisika dan Matematika, Private Tutor & Freelance Website Developer.
 
+**🟢 Status: LIVE di produksi** — [sekolahmania.com](https://sekolahmania.com)
+Frontend di **Vercel** · Backend di **Convex Cloud** (`wandering-warbler-763`) · Domain via **Cloudflare**
+
 ---
 
 ## Daftar Isi
@@ -17,6 +20,7 @@
 - [Desain Sistem (CSS Tokens)](#desain-sistem-css-tokens)
 - [JavaScript](#javascript)
 - [Formulir & Backend (Convex)](#formulir--backend-convex)
+- [Operasional (Membaca Data Masuk)](#operasional-membaca-data-masuk)
 - [Internasionalisasi (i18n)](#internasionalisasi-i18n)
 - [Deployment](#deployment)
 - [Roadmap](#roadmap)
@@ -29,7 +33,7 @@
 
 SekolahMania adalah situs web statis satu halaman (_single-page static site_) yang dirancang sebagai platform pelatihan guru untuk program **Pembelajaran Mendalam (PM)** dari Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen) Republik Indonesia. Platform ini memuat materi, aktivitas interaktif H5P, alat perancangan RPM (_Rencana Pelaksanaan Pembelajaran Mendalam_), media hub video/dokumen, serta formulir Q&A dan umpan balik peserta.
 
-Platform ini dibangun dengan filosofi arsitektur **zero-framework** — terinspirasi dari pendekatan Aloha Browser: HTML statis, jQuery, CSS semantik buatan sendiri, tanpa bundler, tanpa runtime, tanpa hidration overhead. Backend menggunakan **Convex** (cloud-hosted atau self-hosted) melalui HTTP Actions yang dipanggil langsung via `fetch()` dari HTML statis.
+Platform ini dibangun dengan filosofi arsitektur **zero-framework** — terinspirasi dari pendekatan Aloha Browser: HTML statis, jQuery, CSS semantik buatan sendiri, tanpa bundler, tanpa runtime, tanpa hidration overhead. Backend menggunakan **Convex** melalui HTTP Actions yang dipanggil langsung via `fetch()` dari HTML statis. Di produksi, frontend dilayani **Vercel** dan backend berjalan di **Convex Cloud**, dengan domain dikelola lewat **Cloudflare**.
 
 **GitHub Repository:** [https://github.com/sekolahmania/sekolahmania-website](https://github.com/sekolahmania/sekolahmania-website)
 
@@ -88,10 +92,12 @@ Platform ini didasarkan pada dokumen resmi **"Pembelajaran Mendalam: Menuju Pend
 
 - Hamburger animation dengan CSS 3-bar → X transform (Aloha tidak memiliki ini)
 - Active nav link indicator via scroll Intersection tracking
-- Scroll-based progress strip (sticky, show/hide)
+- Scroll-based progress strip 7-segmen (sticky, show/hide)
 - Back-to-top button dengan smooth scroll
-- Unit Plan Builder: 4-step wizard form dengan download `.txt`
+- Unit Plan Builder: 4-step wizard dengan autosave `localStorage` + export **PDF** (`html2pdf.js`, fallback `.txt`)
 - Media tab switcher (Video / Dokumen) tanpa page reload
+- Panduan STEM 7-tab (Bab 1–6 + Glosarium) dengan accordion & tabel responsif
+- Open Graph / Twitter card (1200×630) untuk berbagi sosial
 
 ---
 
@@ -116,6 +122,8 @@ sekolahmania-website/          # github.com/sekolahmania/sekolahmania-website
 │       ├── favicon.svg      # Favicon vektor
 │       ├── icon-192.png     # Ikon PWA 192×192
 │       ├── icon-512.png     # Ikon PWA 512×512
+│       ├── og-image.png     # Social card 1200×630 (Open Graph / Twitter)
+│       ├── og-image.svg     # Sumber OG card (editable)
 │       ├── ayuk-ratna.webp  # Foto narasumber (Ayuk Ratna)
 │       └── suta-pinatih.webp # Foto pengembang (Suta)
 │
@@ -142,13 +150,19 @@ sekolahmania-website/          # github.com/sekolahmania/sekolahmania-website
 
 ### `.env.local` — Konfigurasi Convex
 
+Proyek ini di-deploy ke **Convex Cloud**. Setelah `npx convex dev` menautkan proyek, CLI mengisi `.env.local` secara otomatis:
+
 ```bash
 # .env.local — JANGAN commit file ini ke Git (sudah ada di .gitignore)
-CONVEX_SELF_HOSTED_URL=http://127.0.0.1:3210
-CONVEX_SELF_HOSTED_ADMIN_KEY=convex-self-hosted|<hex-key>
+# Diisi otomatis oleh `npx convex dev` saat menaut ke Convex Cloud
+CONVEX_DEPLOYMENT=dev:qualified-husky-440        # deployment dev
+CONVEX_URL=https://wandering-warbler-763.convex.cloud
+CONVEX_SITE_URL=https://wandering-warbler-763.convex.site
 ```
 
-> ⚠️ **Penting:** Key harus menyertakan prefix `convex-self-hosted|` secara lengkap — termasuk karakter `|`. Menghilangkan prefix ini menyebabkan error `401 Unauthorized: BadAdminKey` saat `npx convex deploy`.
+> ⚠️ **Cloud vs Self-hosted — jangan dicampur.** Jika `CONVEX_SELF_HOSTED_URL` ada di `.env.local`, CLI akan men-deploy ke Docker lokal (`http://127.0.0.1:3210`) — bukan ke cloud. Akibatnya situs publik memanggil deployment yang kosong dan data tidak pernah tersimpan. Untuk produksi cloud, pastikan **tidak ada** baris `CONVEX_SELF_HOSTED_*`.
+
+> ⚠️ **Self-hosted (jika dipakai):** key admin harus menyertakan prefix lengkap, mis. `convex-self-hosted|<hex>` (termasuk karakter `|`). Tanpa prefix → `401 Unauthorized: BadAdminKey`.
 
 ---
 
@@ -158,7 +172,7 @@ CONVEX_SELF_HOSTED_ADMIN_KEY=convex-self-hosted|<hex-key>
 
 - Layout 2-kolom: teks kiri, Speaker Card kanan
 - Animasi `fadeUp` bertahap (CSS keyframe, no JS)
-- Speaker Card dengan avatar initial, rotating ring, topic tags, PM badge
+- Speaker Card dengan foto narasumber (Ayuk Ratna), rotating ring, topic tags, PM badge
 - Stats row: 5 Modul · 8 Dimensi · 3 Pengalaman Belajar
 - Responsive: stack 1 kolom di mobile
 
@@ -342,7 +356,7 @@ Satu `$(window).on('scroll.sekolahmania')` handler mengelola:
 
 - Nav background opacity
 - Progress strip show/hide
-- 6-segment progress bar fill
+- 7-segment progress bar fill (satu per section utama)
 - Back-to-top visibility
 - Active nav link highlighting (per section)
 
@@ -419,14 +433,28 @@ export default defineSchema({
 ### Deploy Convex Functions
 
 ```bash
-# Cloud (convex.dev)
-npx convex deploy
+# Cloud (produksi) — yang dipakai SekolahMania
+npx convex dev      # sekali, untuk login & menaut proyek cloud
+npx convex deploy   # push schema + functions ke produksi
 
-# Self-hosted (Docker lokal)
+# Self-hosted (Docker lokal) — opsional, untuk dev/testing
 npx convex deploy \
   --url http://127.0.0.1:3210 \
   --admin-key 'convex-self-hosted|<your-hex-key>'
 ```
+
+> Output deploy yang benar untuk produksi: `Deployed Convex functions to https://wandering-warbler-763.convex.cloud`. Jika muncul `http://127.0.0.1:3210`, berarti masih menarget Docker lokal (lihat catatan `.env.local` di atas).
+
+### CORS — kunci ke domain produksi
+
+`convex/http.ts` membatasi origin yang boleh memanggil endpoint. Di produksi, kunci ke domain asli (bukan `*`):
+
+```typescript
+// convex/http.ts
+const ALLOWED_ORIGIN = "https://sekolahmania.com";
+```
+
+Setelah mengubah, deploy ulang: `npx convex deploy`.
 
 ### Self-Hosting dengan Docker
 
@@ -459,15 +487,43 @@ npx convex deploy
 ### Update `CONVEX_HTTP_URL` di `index.html`
 
 ```javascript
-// Setelah deploy, update baris ini di public/index.html:
-var CONVEX_HTTP_URL = "https://<your-slug>.convex.site"; // cloud
-// atau
-var CONVEX_HTTP_URL = "https://convex.sekolahmania.com"; // self-hosted dengan domain
-// atau (development lokal saja):
+// public/index.html — gunakan URL .convex.site (BUKAN .convex.cloud), tanpa trailing slash:
+var CONVEX_HTTP_URL = "https://wandering-warbler-763.convex.site"; // produksi (cloud)
+// atau (development lokal/Docker saja):
 var CONVEX_HTTP_URL = "http://127.0.0.1:3211";
 ```
 
+> Catatan: `.convex.cloud` adalah URL klien/API; `.convex.site` adalah URL HTTP Actions yang dipanggil `fetch()`. Pakai `.convex.site` di sini.
+
 Panduan lengkap migrasi dari Supabase ke Convex tersedia di [`CONVEX_MIGRATION.md`](./CONVEX_MIGRATION.md).
+
+---
+
+## Operasional (Membaca Data Masuk)
+
+Setiap kiriman dari situs tersimpan di Convex Cloud. Tiga cara membacanya, dari yang paling sederhana:
+
+### 1. Dashboard Convex (sudah aktif)
+
+Cara termudah — tanpa kode tambahan. Buka [dashboard.convex.dev](https://dashboard.convex.dev) → pilih deployment `wandering-warbler-763` → tab **Data**:
+
+| Tabel        | Isi                                                |
+| ------------ | -------------------------------------------------- |
+| `questions`  | Pertanyaan dari form Tanya Jawab                   |
+| `feedback`   | Umpan balik + rating bintang dari peserta          |
+| `unit_plans` | RPM yang disusun lewat Unit Plan Builder           |
+
+Bisa difilter, diurutkan, dan diekspor ke CSV langsung dari dashboard. Cukup untuk kebutuhan saat ini.
+
+### 2. Notifikasi Email (rencana)
+
+Agar Ayuk tahu ada pertanyaan baru tanpa membuka dashboard, gunakan **Convex action** + layanan email (mis. Resend). Pola: setiap `insertQuestion` memicu action yang mengirim email ringkasan. Memerlukan API key Resend disimpan sebagai environment variable di Convex (bukan di repo).
+
+### 3. Live Q&A Feed (rencana)
+
+Query `listRecentQuestions` di `convex/queries.ts` sudah siap. Dengan `ConvexClient` di sisi browser, daftar pertanyaan bisa tampil real-time di halaman admin tanpa refresh — cocok untuk ditayangkan saat sesi pelatihan berlangsung.
+
+> Ketiganya dibahas lebih lengkap sebagai item Roadmap v1.3 di bawah.
 
 ---
 
@@ -601,18 +657,23 @@ Semua berkas berikut sudah disertakan dan siap dipakai:
 ### Urutan deploy yang disarankan
 
 ```bash
-# 1. Backend Convex (pilih cloud ATAU self-hosted)
+# 1. Backend Convex (cloud) — login & deploy ke produksi
 npm install
-npx convex deploy                      # cloud
-# atau: cd convex-server && docker compose up -d   # self-hosted
+npx convex dev      # sekali: login + tautkan proyek cloud, lalu Ctrl+C
+npx convex deploy   # push ke produksi → URL: https://<slug>.convex.cloud
 
-# 2. Ambil HTTP Actions URL, lalu set di public/index.html:
+# 2. Set HTTP Actions URL di public/index.html (TANPA trailing slash):
 #    var CONVEX_HTTP_URL = "https://<slug>.convex.site";
 
-# 3. Deploy frontend ke Vercel
-git add . && git commit -m "deploy: SekolahMania v1.1 + Panduan STEM"
+# 3. Kunci CORS di convex/http.ts → "https://sekolahmania.com", lalu:
+npx convex deploy
+
+# 4. Deploy frontend ke Vercel (otomatis via Git)
+git add . && git commit -m "deploy: SekolahMania production"
 git push
 ```
+
+> ⚠️ **Trailing slash:** `CONVEX_HTTP_URL` tidak boleh diakhiri `/`. Kode menambahkan `"/submitQuestion"`, jadi URL berakhiran slash menghasilkan `//submitQuestion` (dobel) dan request gagal.
 
 ### Roadmap 1.1 — Ekstraksi Aset (opsional)
 
@@ -638,40 +699,53 @@ git push
 - [x] Q&A Form + Feedback Form
 - [x] Responsive mobile-first
 - [x] Progress strip + Back-to-top
-- [x] Convex HTTP Actions (Q&A, Feedback, Unit Plan) — live
+- [x] Convex HTTP Actions (Q&A, Feedback, Unit Plan)
 - [x] Panduan STEM digabung dari `panduan-stem-sma.html`
 
-### v1.1 — Optimasi (dari Roadmap) ✅ sebagian
+### v1.1 — Optimasi & Branding ✅
 
+- [x] **1.1** Ekstraksi CSS/JS ke `public/` (berkas siap, opsional diaktifkan)
 - [x] **1.2** Lazy-loading helper untuk `<img>`/`<iframe>` (otomatis)
 - [x] **1.3** Autosave Unit Plan via `localStorage` + restore + clear-on-submit
 - [x] **2.1** Export PDF profesional via `html2pdf.js` (fallback `.txt`)
-- [x] **1.1** Ekstraksi CSS/JS ke `public/` (berkas siap, opsional diaktifkan)
 - [x] Logo, favicon, ikon PWA, foto narasumber & pengembang terpasang
-- [x] Restrukturisasi `public/` sebagai web root (siap deploy Vercel)
-- [ ] **2.2** Progress tracking via xAPI (butuh embed H5P nyata — saat ini scroll-depth proxy)
+- [x] Restrukturisasi `public/` sebagai web root (Vercel)
+- [x] PWA manifest (`manifest.json`)
+- [x] Open Graph / Twitter card (1200×630) — terverifikasi tampil di WhatsApp
+
+### v1.2 — Produksi LIVE ✅
+
+- [x] Deploy frontend ke **Vercel**
+- [x] Deploy backend ke **Convex Cloud** (`wandering-warbler-763`)
+- [x] Custom domain **sekolahmania.com** via Cloudflare (A + CNAME)
+- [x] **CORS dikunci** ke `https://sekolahmania.com` di `convex/http.ts`
+- [x] Verifikasi end-to-end: kiriman form tersimpan di tabel Convex
+
+### v1.3 — Operasional Data (fokus berikutnya)
+
+Membaca & menindaklanjuti kiriman dari guru. Lihat bagian [Operasional](#operasional-membaca-data-masuk).
+
+- [x] Baca data via Dashboard Convex (Data tab) — aktif
+- [ ] **Notifikasi email** ke Ayuk saat ada pertanyaan baru (Convex action + Resend)
+- [ ] **Live Q&A feed** real-time (`listRecentQuestions` + `ConvexClient`) untuk sesi pelatihan
+- [ ] Halaman admin sederhana (lihat & tandai pertanyaan terjawab)
+
+### v1.4 — Konten & Media (Ayuk sedang mengerjakan)
+
+- [ ] Wire link unduh dokumen (8 item) ke Google Drive nyata
+- [ ] Embed video pelatihan nyata (YouTube iframe lazy-load)
+- [ ] H5P embed aktif via iFrame
+- [ ] **2.2** Progress tracking via xAPI dari H5P (saat ini scroll-depth proxy)
 - [ ] **3.1** Skenario fisika H5P (kinematika / energi terbarukan)
 
-### v1.2 — Backend & Konten
+### v2.0 — Lanjutan
 
-- [ ] Admin dashboard (Convex dashboard / Next.js)
-- [ ] Email notifikasi ke pembicara (Convex scheduled functions / actions)
-- [ ] Realtime live Q&A feed (Convex `listRecentQuestions` + ConvexClient)
-- [ ] Embed YouTube player nyata (iframe lazy-load)
-- [x] Foto narasumber Ibu Ayuk Ratna Puspaningsih terpasang di speaker card
-- [ ] H5P embed aktif via iFrame
-
-### v1.3 — Fitur Lanjutan
-
-- [ ] i18n bilingual ID/EN (aktifkan loader)
-- [x] PWA manifest (`manifest.json`) — terpasang; tambah service worker untuk offline
+- [ ] i18n bilingual ID/EN (loader sudah disiapkan)
 - [ ] Plausible analytics proxy (config `vercel.json` siap)
-- [ ] Pencarian materi (Fuse.js lightweight fuzzy search)
+- [ ] Service worker untuk mode offline
+- [ ] Pencarian materi (Fuse.js)
 - [ ] Mode gelap/terang toggle
-
-### v2.0 — Integrasi Ekosistem
-
-- [ ] Multi-speaker support (lebih dari satu narasumber)
+- [ ] Multi-speaker support
 - [ ] LMS sederhana: tracking progress per peserta
 
 ---
@@ -699,11 +773,11 @@ Konten pedagogis (materi PM, 8 Dimensi, kerangka pembelajaran) berasal dari doku
 
 <div align="center">
 
-Untuk kemajuan pendidikan Indonesia
+Untuk kemajuan pendidikan Indonesia 🇮🇩
 
 **SekolahMania.com** · Bali, Indonesia · 2026
 
-_Kontributor Konten: Ayuk Ratna Puspaningsih — SMA Negeri Bali Mandara_ <>
-Web Developer: I Gede Suta Pinatih
+_Narasumber & Konten:_ **Ayuk Ratna Puspaningsih** — SMA Negeri Bali Mandara
+_Web Developer:_ **I Gede Suta Pinatih**
 
 </div>

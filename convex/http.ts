@@ -9,28 +9,39 @@ import { api } from "./_generated/api";
 const http = httpRouter();
 
 // ── CORS ──────────────────────────────────────────────────────────────────
-// For production, replace "*" with your real origin, e.g.
-//   "https://sekolahmania.com"
-const ALLOWED_ORIGIN = "https://sekolahmania.com";
+// CORS responses can only return ONE Access-Control-Allow-Origin value, so we
+// check the request's Origin against an allow-list and echo back the match.
+// This supports both the apex and www subdomain (browsers treat them as
+// different origins, and Vercel serves the site from www.sekolahmania.com).
+const ALLOWED_ORIGINS = [
+  "https://sekolahmania.com",
+  "https://www.sekolahmania.com",
+];
 
-function corsHeaders() {
+function corsHeaders(request: Request) {
+  const origin = request.headers.get("Origin") ?? "";
+  const allowed = ALLOWED_ORIGINS.includes(origin)
+    ? origin
+    : ALLOWED_ORIGINS[0];
   return {
-    "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+    "Access-Control-Allow-Origin": allowed,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    Vary: "Origin",
   };
 }
 
-function json(body: unknown, status = 200) {
+function json(request: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders() },
+    headers: { "Content-Type": "application/json", ...corsHeaders(request) },
   });
 }
 
 // Preflight handler shared by all routes
 const preflight = httpAction(
-  async () => new Response(null, { status: 204, headers: corsHeaders() }),
+  async (_ctx, request) =>
+    new Response(null, { status: 204, headers: corsHeaders(request) }),
 );
 
 // ── /submitQuestion ─────────────────────────────────────────────────────────
@@ -42,7 +53,7 @@ http.route({
     try {
       const body = await request.json();
       if (!body.name?.trim() || !body.message?.trim()) {
-        return json({ error: "name and message are required" }, 400);
+        return json(request, { error: "name and message are required" }, 400);
       }
       const id = await ctx.runMutation(api.mutations.insertQuestion, {
         name: body.name.trim(),
@@ -50,9 +61,9 @@ http.route({
         subject: body.subject || undefined,
         message: body.message.trim(),
       });
-      return json({ success: true, id }, 201);
+      return json(request, { success: true, id }, 201);
     } catch (err) {
-      return json({ error: "Server error" }, 500);
+      return json(request, { error: "Server error" }, 500);
     }
   }),
 });
@@ -66,7 +77,7 @@ http.route({
     try {
       const body = await request.json();
       if (!body.name?.trim() || !body.message?.trim()) {
-        return json({ error: "name and message are required" }, 400);
+        return json(request, { error: "name and message are required" }, 400);
       }
       const id = await ctx.runMutation(api.mutations.insertFeedback, {
         name: body.name.trim(),
@@ -75,9 +86,9 @@ http.route({
         rating: typeof body.rating === "number" ? body.rating : undefined,
         message: body.message.trim(),
       });
-      return json({ success: true, id }, 201);
+      return json(request, { success: true, id }, 201);
     } catch (err) {
-      return json({ error: "Server error" }, 500);
+      return json(request, { error: "Server error" }, 500);
     }
   }),
 });
@@ -91,7 +102,7 @@ http.route({
     try {
       const body = await request.json();
       if (!body.tujuan?.trim()) {
-        return json({ error: "tujuan is required" }, 400);
+        return json(request, { error: "tujuan is required" }, 400);
       }
       const id = await ctx.runMutation(api.mutations.insertUnitPlan, {
         mapel: body.mapel || "Biologi",
@@ -112,9 +123,9 @@ http.route({
         catatan: body.catatan || undefined,
         dimensi: Array.isArray(body.dimensi) ? body.dimensi : [],
       });
-      return json({ success: true, id }, 201);
+      return json(request, { success: true, id }, 201);
     } catch (err) {
-      return json({ error: "Server error" }, 500);
+      return json(request, { error: "Server error" }, 500);
     }
   }),
 });
