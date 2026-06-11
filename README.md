@@ -3,7 +3,7 @@
 > Platform pelatihan guru STEM interaktif untuk mendukung implementasi **Pembelajaran Mendalam** (PM) di sekolah menengah Indonesia.
 >
 > Founder 1: **Ayuk Ratna Puspaningsih** — Guru Biologi, SMA Negeri Bali Mandara.
-> Founder 2: **I Gede Suta Piantih** — Guru Fisika dan Matematika, Private Tutor & Freelance Website Developer.
+> Founder 2: **I Gede Suta Pinatih** — Guru Fisika dan Matematika, Private Tutor & Freelance Website Developer.
 
 ---
 
@@ -138,7 +138,7 @@ sekolahmania-website/          # github.com/sekolahmania/sekolahmania-website
 └── CONVEX_MIGRATION.md      # Panduan migrasi Supabase → Convex
 ```
 
-> **Penting — kenapa `index.html` ada di dalam `public/`:** Saat framework preset Vercel = **"Other"**, Vercel otomatis menjadikan folder `public/` sebagai *output directory* (web root) bila folder itu ada. Karena itu seluruh berkas yang dilayani publik (HTML, gambar, manifest) harus berada di `public/`, sedangkan berkas backend & konfigurasi (`convex/`, `package.json`, `vercel.json`) tetap di root repo. Dengan susunan ini, path aset menjadi bersih: `/img/logo.svg`, `/manifest.json`, `/css/style.css`.
+> **Penting — kenapa `index.html` ada di dalam `public/`:** Saat framework preset Vercel = **"Other"**, Vercel otomatis menjadikan folder `public/` sebagai _output directory_ (web root) bila folder itu ada. Karena itu seluruh berkas yang dilayani publik (HTML, gambar, manifest) harus berada di `public/`, sedangkan berkas backend & konfigurasi (`convex/`, `package.json`, `vercel.json`) tetap di root repo. Dengan susunan ini, path aset menjadi bersih: `/img/logo.svg`, `/manifest.json`, `/css/style.css`.
 
 ### `.env.local` — Konfigurasi Convex
 
@@ -491,7 +491,7 @@ $.getJSON("/js/i18n/" + lang + ".json?1", function (strings) {
 });
 ```
 
-Buat file `/js/i18n/en.json` untuk support bilingual Indonesia–Inggris (target wisatawan di platform NusaBaliConnect jika diintegrasikan).
+Buat file `/js/i18n/en.json` untuk support bilingual Indonesia–Inggris.
 
 ---
 
@@ -580,23 +580,23 @@ Setiap kali mengubah `scripts.js` atau file i18n, naikkan querystring integer:
 
 Semua berkas berikut sudah disertakan dan siap dipakai:
 
-| Berkas                             | Fungsi                                                         |
-| ---------------------------------- | -------------------------------------------------------------- |
-| `public/index.html`                | Aplikasi utama (~6.700 baris) — termasuk Panduan STEM          |
-| `public/img/*`                     | Logo, favicon, ikon PWA, foto narasumber & pengembang          |
-| `public/manifest.json`             | PWA manifest (installable, theme color, ikon)                  |
-| `public/robots.txt` + `sitemap.xml`| SEO dasar                                                      |
-| `public/css/style.css`             | CSS terekstraksi (Roadmap 1.1) — opsional                      |
-| `public/js/app.js`                 | Logika jQuery terekstraksi (Roadmap 1.1) — opsional            |
-| `convex/schema.ts`                 | Definisi 3 tabel dokumen (questions, feedback, unit_plans)     |
-| `convex/mutations.ts`              | Fungsi write (insert Question/Feedback/UnitPlan)               |
-| `convex/queries.ts`                | Fungsi read `listRecentQuestions`                              |
-| `convex/http.ts`                   | HTTP Actions router + CORS (3 endpoint form)                   |
-| `convex-server/docker-compose.yml` | Self-hosted Convex (backend + dashboard)                       |
-| `package.json`                     | Dependency `convex` + skrip `dev`/`deploy`/`deploy:selfhosted` |
-| `.env.local.example`               | Template kredensial Convex (salin → `.env.local`)              |
-| `.gitignore`                       | Melindungi `.env.local`, `node_modules`, `convex/_generated`   |
-| `vercel.json`                      | Plausible proxy rewrites + cache headers + security headers    |
+| Berkas                              | Fungsi                                                         |
+| ----------------------------------- | -------------------------------------------------------------- |
+| `public/index.html`                 | Aplikasi utama (~6.700 baris) — termasuk Panduan STEM          |
+| `public/img/*`                      | Logo, favicon, ikon PWA, foto narasumber & pengembang          |
+| `public/manifest.json`              | PWA manifest (installable, theme color, ikon)                  |
+| `public/robots.txt` + `sitemap.xml` | SEO dasar                                                      |
+| `public/css/style.css`              | CSS terekstraksi (Roadmap 1.1) — opsional                      |
+| `public/js/app.js`                  | Logika jQuery terekstraksi (Roadmap 1.1) — opsional            |
+| `convex/schema.ts`                  | Definisi 3 tabel dokumen (questions, feedback, unit_plans)     |
+| `convex/mutations.ts`               | Fungsi write (insert Question/Feedback/UnitPlan)               |
+| `convex/queries.ts`                 | Fungsi read `listRecentQuestions`                              |
+| `convex/http.ts`                    | HTTP Actions router + CORS (3 endpoint form)                   |
+| `convex-server/docker-compose.yml`  | Self-hosted Convex (backend + dashboard)                       |
+| `package.json`                      | Dependency `convex` + skrip `dev`/`deploy`/`deploy:selfhosted` |
+| `.env.local.example`                | Template kredensial Convex (salin → `.env.local`)              |
+| `.gitignore`                        | Melindungi `.env.local`, `node_modules`, `convex/_generated`   |
+| `vercel.json`                       | Plausible proxy rewrites + cache headers + security headers    |
 
 ### Urutan deploy yang disarankan
 
@@ -699,7 +699,7 @@ Konten pedagogis (materi PM, 8 Dimensi, kerangka pembelajaran) berasal dari doku
 
 <div align="center">
 
-Dibuat dengan ♥ untuk guru-guru Indonesia
+Untuk kemajuan pendidikan Indonesia
 
 **SekolahMania.com** · Bali, Indonesia · 2026
 
