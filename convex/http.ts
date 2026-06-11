@@ -11,7 +11,7 @@ const http = httpRouter();
 // ── CORS ──────────────────────────────────────────────────────────────────
 // For production, replace "*" with your real origin, e.g.
 //   "https://sekolahmania.com"
-const ALLOWED_ORIGIN = "*";
+const ALLOWED_ORIGIN = "https://sekolahmania.com";
 
 function corsHeaders() {
   return {
